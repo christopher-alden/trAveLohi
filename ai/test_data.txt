@@ -1,0 +1,7 @@
+Images in Brazil: 111
+Images in Canada: 121
+Images in Finland: 124
+Images in Japan: 160
+Images in United_States: 150
+Images in United-Kingdom: 149
+Unreadable Images: 79

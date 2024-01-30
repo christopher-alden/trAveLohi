@@ -1,0 +1,34 @@
+{
+	"images": [
+		{
+			"src": "src/static/assets/landing/japan-fujinomiya.jpg",
+			"country": "Japan",
+            "location": "Fujinomiya, Shizuoka",
+			"description": "Immerse yourself in the rich cultural tapestry of Japan."
+		},
+        {
+			"src": "src/static/assets/landing/swiss-oberageri.jpg",
+			"country": "Switzerland",
+            "location": "Oberägeri, ZG",
+			"description": "Experience the essence of alpine beauty in Switzerland."
+		},
+        {
+			"src": "src/static/assets/landing/indonesia-bali.jpg",
+			"country": "Indonesia",
+            "location": "Bali, Nusa Penida",
+			"description": "Discover the enchanting beauty and unique culture of Bali."
+		},
+        {
+			"src": "src/static/assets/landing/italy-lombardy.jpg",
+			"country": "Italy",
+            "location": "Lombardy, Lake Como",
+			"description": "Explore the stunning landscapes and rich history of Lombardy."
+		},
+        {
+			"src": "src/static/assets/landing/peru-cusco.jpg",
+			"country": "Peru",
+            "location": "Cusco, Machu Picchu",
+			"description": "Unveil the mysteries of the ancient Inca civilization in Machu Picchu."
+		}
+	]
+}

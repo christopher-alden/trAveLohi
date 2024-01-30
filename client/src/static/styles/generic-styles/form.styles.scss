@@ -1,0 +1,145 @@
+@import '../variables/variables.styles.scss';
+
+.basic-tf{
+    all: unset;
+    box-sizing: border-box;
+    @include padding(16px,8px);
+    @include br($br-xs);
+    outline: solid 1px $white;
+    font-size: $f-base;
+}
+
+
+.button {
+    border: none;
+    @include br($br-s);
+    font-weight: 700;
+    font-size: $f-base;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.primary-btn{
+    @include padding($g-8, $g-4);
+    background-color: $blue;
+    color: $white;
+    &:hover {
+        background-color: darken($blue, 10%);
+    }
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+.color-white{
+    color: $white;
+}
+
+.justify-end{
+    justify-content: end
+}
+
+.outline-btn{
+    @include padding($g-8, $g-4);
+    background-color: $white;
+    color: $black;
+    border: solid 1px $black;
+    &:hover {
+        background-color: darken($white, 10%);
+    }
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+.transparent-btn{
+    font-weight: 300;
+    background-color: transparent;
+    color: $white;
+}
+
+.flex-btn{
+    @include center-flex;
+    gap: $g-2
+}
+
+.link{
+    all: unset;
+    cursor: pointer;
+}
+.link-with-icon{
+    font-weight: 300;
+    background-color: transparent;
+    color: $white;
+    all:unset;
+    @include center-flex;
+    gap: $g-2;
+    @include padding('0px', $g-4);
+    cursor: pointer;
+}
+.link-with-icon img {
+    transition: transform 0.3s ease-in-out;
+    margin-right: 5px;
+}
+
+.link-with-icon:hover img {
+    transform: translateX(-5px);
+}
+.labelForm{
+    @include start-flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: "↓";
+    font-size: 1rem;
+    top: 6px;
+    right: 10px;
+    position: absolute;
+}
+
+.checkbox{
+    font-size: $f-sm;
+    width: fit-content;
+    @include center-flex;
+    gap: $g-2;
+    outline: none;
+}
+
+.checkbox input{
+    box-sizing: border-box;
+    outline: none;
+    
+
+}
+
+.otp-container{
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    display: flex;
+    gap: $g-4;
+
+    
+    input{
+        all: unset;
+        font-weight: 700;
+        font-size: $f-xl;
+        @include br($br-xs);
+
+        width: 60px;
+        height: 60px;
+        outline: solid 1px $black;
+        text-align: center;
+    }
+}
+
+.transparent-dropdown{
+    background-color: transparent;
+    outline: none;
+    border: none;
+}

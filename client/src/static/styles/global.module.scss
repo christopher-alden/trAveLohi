@@ -1,0 +1,36 @@
+@import './variables/variables.styles.scss';
+
+:export{
+    //FONTS
+    fxs:$f-xs;
+    fsm:$f-sm;
+    fbase:$f-base;
+    fxl:$f-xl;
+    f2xl:$f-2xl;
+    f3xl:$f-3xl;
+    f4xl:$f-4xl;
+    f5xl:$f-5xl;
+    f6xl:$f-6xl;
+    f7xl:$f-7xl;
+    f8xl:$f-8xl;
+
+    //COLORS
+    white:$white;
+    secondaryWhite:$secondary-white;
+    black:$black;
+    blue:$blue;
+    error:$error;
+
+    //GAP
+    g1:$g-1;
+    g2:$g-2;
+    g4:$g-4;
+    g6:$g-6;
+    g8:$g-8;
+    g12:$g-12;
+    g16:$g-16;
+
+    brl:$br-l;
+    brm:$br-m;
+    brs:$br-s;
+}

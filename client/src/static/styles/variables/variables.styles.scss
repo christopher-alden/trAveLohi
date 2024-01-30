@@ -1,0 +1,66 @@
+//COLORS
+$white: #fafafa;
+$black: #1a1a1a;
+$secondary-white: #c9c9c9;
+$blue: #006fb9;
+$error: #ff3f3f;
+
+//RADIUS
+$br-xs: 4px;
+$br-s: 8px;
+$br-m: 12px;
+$br-l: 16px;
+
+
+//TYPOGRAPHY
+$f-xs: 0.75rem;
+$f-sm: 0.875rem;
+$f-base: 1rem;
+$f-xl: 1.25rem;
+$f-2xl: 1.5rem;
+$f-3xl: 1.875rem;
+$f-4xl: 2.25rem;
+$f-5xl: 3rem;
+$f-6xl: 3.75rem;
+$f-7xl: 4.5rem;
+$f-8xl: 6rem;
+
+//GAP
+$g-1:0.25rem;
+$g-2:0.5rem;
+$g-4:1rem;
+$g-6:1.5rem;
+$g-8:2rem;
+$g-12:3rem;
+$g-16:4rem;
+
+@mixin center-flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}  
+
+@mixin start-flex{
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flexDirection: 'column';
+}  
+
+@mixin image-cover{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@mixin padding ($x, $y){
+    padding-block: $y;
+    padding-inline: $x;
+}
+
+@mixin br($rad){
+    border-radius: $rad;
+    -webkit-border-radius:$rad;
+    -moz-border-radius:$rad;
+}
+

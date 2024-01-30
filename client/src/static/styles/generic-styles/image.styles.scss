@@ -1,0 +1,38 @@
+@import '../variables/variables.styles.scss';
+
+.background-image {
+    @include image-cover;
+    opacity: 0.3;
+    // position: absolute;
+    top: 0;
+    left:0;
+    z-index: -9;
+    box-sizing: border-box;
+}
+
+.image{
+    @include image-cover
+}
+
+.zoom-in-out{
+    animation: zoomOutAnimation 5s cubic-bezier(0.5, 0.5, 0.6, 1) forwards;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.background-dim {
+    width: 100vw;
+    height: 100vh;
+    background-color: $black;
+    position: absolute;
+    z-index: -10
+}
+
+@keyframes zoomOutAnimation {
+    from {
+        scale: 1.05;
+    }
+    to {
+        scale: 1;
+    }
+}
