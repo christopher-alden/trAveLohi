@@ -10,6 +10,7 @@
 }
 
 
+
 .button {
     border: none;
     @include br($br-s);
@@ -18,8 +19,10 @@
     transition: background-color 0.3s, transform 0.1s;
 }
 
+
+
 .primary-btn{
-    @include padding($g-8, $g-4);
+    @include padding($g-4, $g-4);
     background-color: $blue;
     color: $white;
     &:hover {
@@ -28,6 +31,45 @@
     &:active {
         transform: scale(0.98);
     }
+}
+
+.sidebar-btn{
+    @include center-flex;
+    justify-content: start;
+    width: 100%;
+    @include padding($g-8, $g-6);
+    background-color: $secondary-black;
+    text-align: start;
+}
+.bento-btn{
+    width: 100%;
+    @include padding($g-4, $g-4);
+    background-color: $secondary-black;
+    text-align: start;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bento-icon{
+    filter: brightness(0.5);
+}
+
+.icon-right{
+    rotate: -90deg;
+}
+
+.icon-padding{
+    @include padding($g-2, $g-2)
+}
+.rotate {
+    transform: rotate(180deg);
+}
+.transition{
+    transition: all 1s ease-in-out;
+}
+
+.basic-dropdown{
+    padding-right: $g-8;
 }
 
 .color-white{
@@ -57,9 +99,14 @@
     color: $white;
 }
 
+
 .flex-btn{
     @include center-flex;
     gap: $g-2
+}
+.flex-align{
+    display: flex;
+    align-items: center;
 }
 
 .link{
@@ -73,7 +120,7 @@
     all:unset;
     @include center-flex;
     gap: $g-2;
-    @include padding('0px', $g-4);
+    // @include padding('0px', $g-4);
     cursor: pointer;
 }
 .link-with-icon img {
@@ -81,10 +128,24 @@
     margin-right: 5px;
 }
 
-.link-with-icon:hover img {
+.link-with-icon.left:hover img {
     transform: translateX(-5px);
 }
-.labelForm{
+.link-with-icon.right:hover img {
+    transform: translateX(5px);
+}
+
+.icon-move.right{
+    rotate: 180deg;
+    transition: transform 0.3s ease-in-out;
+    // margin-right: 5px;
+}
+.icon-move:hover{
+    transform: translateX(-10px);
+
+}
+
+.label-form{
     @include start-flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -142,4 +203,45 @@
     background-color: transparent;
     outline: none;
     border: none;
+}
+
+
+.outline-white-secondary{
+    outline: $secondary-white 1px solid;
+}
+
+
+.input-file {
+    // all: unset;
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+    // display: none;
+    
+}
+
+.custom-file-upload {
+    color: $secondary-white;
+    border: 1px solid $secondary-black;
+    display: inline-block;
+    @include padding($g-4, $g-4);
+    @include br($br-xs);
+    cursor: pointer;
+}
+
+.calendar-light::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(30%);
+    cursor: pointer;
+}
+
+
+.form-top-bottom{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
 }

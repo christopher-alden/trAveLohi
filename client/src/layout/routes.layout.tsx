@@ -6,6 +6,8 @@ const Home = React.lazy(() => import('@pages/Home'));
 const ForgotPassword = React.lazy(() => import('@pages/ForgotPassword'));
 const OTP = React.lazy(() => import('@pages/OTP'));
 const GeoGuesser = React.lazy(() => import('@pages/GeoGuesser'));
+const Admin = React.lazy(() => import('@pages/Admin'));
+const Explore = React.lazy(() => import('@pages/Explore'));
 
 export const MappedRoutes = [
     {
@@ -31,5 +33,13 @@ export const MappedRoutes = [
     {
         element: <GeoGuesser/>,
         path:'/geoguesser',
+    },
+    {
+        element: <Admin/>,
+        path:'/admin',
+    },
+    {
+        element: <Explore/>,
+        path:'/explore',
     },
 ]

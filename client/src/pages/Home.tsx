@@ -1,27 +1,92 @@
 import Container from '@comp/container/Container';
 import Slideshow from '@comp/product/Slideshow';
-import {useContext, useEffect, useState} from 'react';
 import locationInformation from 'src/data/landingSlideshow.json';
-import {UserContext} from 'src/context/userContext';
-import ProtectedRoute from 'src/middleware/ProtectedRoute';
 import Navbar from '@comp/navigation/Navbar';
+import styles from '@styles/global.module.scss'
+import '@styles/generic-styles/container.styles.scss'
+import UserPromoWidget from '@comp/product/UserPromoWidget';
+import FlightSearchWidget from '@comp/product/FlightSearchWidget';
+import FormlessDropdown from '@comp/form/FormlessDropdown';
+import { useState } from 'react';
+import { Flight, classList, tripRouteList } from '@myTypes/flight.types';
+import Footer from '@comp/navigation/Footer';
+import leftArrow from '@icons/arrow-icon.png'
+import Picture from '@comp/container/Picture';
+import Button from '@comp/form/Button';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 const Home = () => {
+	const [chosenFlight, setChosenFlight] = useState<Flight>({arrival:null, departure:null, flightTime:null})
+	const navigate = useNavigate()
 
+	const handleSearch = () =>{
+
+		let searchQuery = `/explore?searchMode=${encodeURIComponent('flights')}`
+
+		//TODO: ini case kalo flight doang
+		if(chosenFlight){
+			if(chosenFlight.departure){
+				searchQuery = searchQuery + `&departureId=${encodeURIComponent(chosenFlight.departure.ID)}`
+			}
+			if(chosenFlight.arrival){
+				searchQuery = searchQuery + `&arrivalId=${encodeURIComponent(chosenFlight.arrival.ID)}`
+			}
+		}
+
+		navigate(searchQuery)
+	}
 
 
 	return (
 		// <ProtectedRoute>
-			<div>
-				{/* {user?.firstName}
-				<button onClick={()=>{logout()}}> logout</button> */}
-
+			<Container px='0px' py='0px' direction='column' width='100vw'>
 				<Navbar/>
-				<Container  px='0px' py='0px' width='100vw' height='100vh'>
-					<Slideshow content={locationInformation}></Slideshow>
+				<Container  px='0px' py='0px' width='100vw' height='80vh'>
+					<Slideshow content={locationInformation}/>
 				</Container>
-			</div>
+				<Container direction='column' px='0px' py='0px' width='100vw' height='fit-content' className='bg-white z-1000 no-br'>
+					<Container  width='100vw' height='325px' className='floating-island-ctr' >
+						<Container px={styles.g16} py={styles.g10} direction='column' width='100%' height='100%' className='bg-white shadow floating-island relative ' gap={styles.g4}>
+							<Container
+								direction="row"
+								px="0px"
+								py="0px"
+								gap={styles.g8}
+								className='z2'
+							>
+								<FormlessDropdown
+									name="trip"
+									className="no-outline no-padding-l"
+									options={tripRouteList}
+								/>
+								<FormlessDropdown
+									name="class"
+									className="no-outline no-padding-l"
+									options={classList}
+								/>
+							</Container>
+							<FlightSearchWidget flight={chosenFlight} setFlight={setChosenFlight} />
+							<Button onClick={()=>{handleSearch()}} victor={chosenFlight.departure==null && chosenFlight.arrival==null} className='primary-btn floating-btn flex-align space-between'>
+								Search
+								<Picture width='25px' height='25px' className='rotate' src={leftArrow}/>
+							</Button>
+						</Container>
+						
+					
+					</Container>
+					{/* PEMBAGI AJA */}
+					<Container height='20vh' width='100vw' className=''></Container>
+					<Container direction='column' width='100vw' height='100vh' gap={styles.g4}>
+						<UserPromoWidget/>
+					</Container>
+				</Container>
+
+				<Footer/>
+					
+			</Container>
 		// </ProtectedRoute>
 	);
 };

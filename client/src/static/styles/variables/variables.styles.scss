@@ -1,7 +1,8 @@
 //COLORS
 $white: #fafafa;
 $black: #1a1a1a;
-$secondary-white: #c9c9c9;
+$secondary-black:#252525;
+$secondary-white: #888888;
 $blue: #006fb9;
 $error: #ff3f3f;
 
@@ -10,6 +11,7 @@ $br-xs: 4px;
 $br-s: 8px;
 $br-m: 12px;
 $br-l: 16px;
+$br-largectr: 48px;
 
 
 //TYPOGRAPHY
@@ -31,8 +33,13 @@ $g-2:0.5rem;
 $g-4:1rem;
 $g-6:1.5rem;
 $g-8:2rem;
+$g-10:2.5rem;
 $g-12:3rem;
 $g-16:4rem;
+$g-20:5rem;
+$g-24:6rem;
+$g-28:7rem;
+$g-32:8rem;
 
 @mixin center-flex{
     display: flex;

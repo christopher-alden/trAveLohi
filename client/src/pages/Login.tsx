@@ -22,22 +22,29 @@ import { UserContext } from 'src/context/userContext';
 //TYPES
 import { UserCredentials } from '@myTypes/user.types';
 import { AttributeRules } from '@util/user.util';
+import { queryClient } from 'src/App';
+import { useMutation } from 'react-query';
+
 
 const Login = () => {
 	const { register, handleSubmit, formState: { errors } } = useForm();
 	const { login } = useContext(UserContext);
 	const navigate = useNavigate()
 
+	const { mutate: loginUser, error, isLoading } = useMutation<any, Error, UserCredentials>(login, {
+		onSuccess: () => {
+			queryClient.invalidateQueries('userData');
+			navigate('/')
+		},
+		
+	});
+
 	const onSubmit = async (data:any)=>{
 		const credentialsUser : UserCredentials = {
 			email:data.email,
 			password: data.password
 		}
-		const res = await login(credentialsUser)
-		console.log(res)
-		if(res === 'Success'){
-			navigate('/')
-		}
+		loginUser(credentialsUser)
 	}
 
 	const onOTP = () =>{
@@ -55,6 +62,7 @@ const Login = () => {
 				direction={'column'}
 				center
 				px="0"
+				className='optical-center-logo'
 			>
                 <Picture src={fullLogo} width='200px'/>
 			</Container>
@@ -68,8 +76,8 @@ const Login = () => {
 				px="0px"
                 py="0px"
 			>
-                <Container px='0px' py='0px' width='30%'>
-                    <Link to='/register' className='link-with-icon'>
+                <Container px='0px' py={styles.g4} width='30%'>
+                    <Link to='/register' className='link-with-icon left'>
                         <Picture width='25px' src={arrow}/>
                         <Label fontSize={styles.fxl} color={styles.white}>Don't have an account?</Label>
                     </Link>

@@ -15,49 +15,56 @@ import (
 const SecretKey = "secret"
 
 func Register(c *fiber.Ctx) error {
-	var data map[string]string
-	if err := c.BodyParser(&data); err != nil {
+	var request map[string]string
+	if err := c.BodyParser(&request); err != nil {
 		return err
 	}
 
 	var existingUser models.User
-	database.DB.Where("email = ?", data["email"]).First((&existingUser))
+	db := database.GetDB()
+	db.Where("email = ?", request["email"]).First((&existingUser))
 
-	if existingUser.Email == data["email"] {
+	if existingUser.Email == request["email"] {
 		c.Status(fiber.StatusConflict)
 		return c.JSON(fiber.Map{
 			"message": "User Already Exists",
 		})
 	}
 
-	dob, err := time.Parse("2006-01-02", data["dateOfBirth"])
+	dob, err := time.Parse("2006-01-02", request["dateOfBirth"])
 	if err != nil {
 		return err
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
+	password, _ := bcrypt.GenerateFromPassword([]byte(request["password"]), 14)
+
+	isBanned := cvtBool(request["isBanned"])
+	isNewsletter := cvtBool(request["isNewsletter"])
+	
 	user := models.User{
-		FirstName:              data["firstName"],
-		LastName:               data["lastName"],
-		Email:                  data["email"],
+		FirstName:              request["firstName"],
+		LastName:               request["lastName"],
+		Email:                  request["email"],
 		Password:               password,
-		Gender:                 data["gender"],
+		Gender:                 request["gender"],
 		DateOfBirth:            dob,
-		ProfilePhoto:           data["profilePhoto"],
-		SecurityQuestion:       data["securityQuestion"],
-		SecurityQuestionAnswer: data["securityQuestionAnswer"],
+		ProfilePhoto:           request["profilePhoto"],
+		SecurityQuestion:       request["securityQuestion"],
+		SecurityQuestionAnswer: request["securityQuestionAnswer"],
+		Role:                   request["role"],
+		IsBanned:               isBanned,
+		IsNewsletter:           isNewsletter,
 	}
 
-
-	database.DB.Create(&user)
+	db.Create(&user)
 	return c.JSON(fiber.Map{
 		"message": "Success",
 	})
 }
 
 func Login(c *fiber.Ctx) error {
-	var data map[string]string
-	if err := c.BodyParser(&data); err != nil {
+	var request map[string]string
+	if err := c.BodyParser(&request); err != nil {
 		c.Status(fiber.StatusBadGateway)
 		return c.JSON(fiber.Map{
 			"message": "Error",
@@ -65,7 +72,8 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	var user models.User
-	database.DB.Where("email = ?", data["email"]).First((&user))
+	db := database.GetDB()
+	db.Where("email = ?", request["email"]).First((&user))
 
 	if user.ID == 0 {
 		c.Status(fiber.StatusNotFound)
@@ -74,7 +82,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
+	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(request["password"])); err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
 			"message": "Incorrect Password",
@@ -96,9 +104,9 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	cookie := fiber.Cookie{
-		Name: "jwt_token_cookie",
-		Value: token,
-		Expires: time.Now().Add(time.Hour*24),
+		Name:     "jwt_token_cookie",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
 		HTTPOnly: true,
 	}
 
@@ -112,7 +120,7 @@ func Login(c *fiber.Ctx) error {
 func LoginOTP(c *fiber.Ctx) error {
 	var request struct {
 		Email string `json:"email"`
-		OTP     string `json:"otp"`
+		OTP   string `json:"otp"`
 	}
 	if err := c.BodyParser(&request); err != nil {
 		c.Status(fiber.StatusBadGateway)
@@ -122,7 +130,8 @@ func LoginOTP(c *fiber.Ctx) error {
 	}
 
 	var user models.User
-	database.DB.Where("email = ?", request.Email).First((&user))
+	db := database.GetDB()
+	db.Where("email = ?", request.Email).First((&user))
 
 	if user.ID == 0 {
 		c.Status(fiber.StatusNotFound)
@@ -132,7 +141,7 @@ func LoginOTP(c *fiber.Ctx) error {
 	}
 
 	var OTP models.OTP
-	database.DB.Where("ID = ?", user.ID).First((&OTP))
+	db.Where("ID = ?", user.ID).First((&OTP))
 
 	if OTP.ID == 0 {
 		c.Status(fiber.StatusNotFound)
@@ -141,7 +150,7 @@ func LoginOTP(c *fiber.Ctx) error {
 		})
 	}
 
-	if request.OTP != OTP.OTP{
+	if request.OTP != OTP.OTP {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
 			"message": "Could Not Login",
@@ -163,9 +172,9 @@ func LoginOTP(c *fiber.Ctx) error {
 	}
 
 	cookie := fiber.Cookie{
-		Name: "jwt_token_cookie",
-		Value: token,
-		Expires: time.Now().Add(time.Hour*24),
+		Name:     "jwt_token_cookie",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
 		HTTPOnly: true,
 	}
 
@@ -176,17 +185,17 @@ func LoginOTP(c *fiber.Ctx) error {
 	})
 }
 
-func Logout (c *fiber.Ctx) error {
+func Logout(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
-		Name: "jwt_token_cookie",
-		Value: "",
-		Expires: time.Now().Add(-time.Hour),
+		Name:     "jwt_token_cookie",
+		Value:    "",
+		Expires:  time.Now().Add(-time.Hour),
 		HTTPOnly: true,
 	}
 
 	c.Cookie(&cookie)
 
 	return c.JSON(fiber.Map{
-		"message" : "Success",
+		"message": "Success",
 	})
 }

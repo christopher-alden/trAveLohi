@@ -4,10 +4,12 @@ type pictureProps = {
 	width: string;
 	height?: string;
 	className?:string
+	// onMouseEnter?:any,
+	// onMouseLeave?:any,
 };
-const Picture = ({ src, width, height, className }: pictureProps) => {
+const Picture = ({ src, width, height, className}: pictureProps) => {
 const style = {
-		width: 'auto',
+		width: width,
 		height: height,
 		maxWidth: width,
 		maxHeight: height,
@@ -19,6 +21,8 @@ const style = {
 	return (
 		<div style={style}>
 			<img
+				// onMouseEnter={onMouseEnter}
+				// onMouseLeave={onMouseLeave}
 				src={src}
 				alt={src}
 				className={`image ${className || ''}`}

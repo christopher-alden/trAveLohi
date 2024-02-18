@@ -17,6 +17,7 @@ type TextFieldProps = {
 	rules: any;
 	name: string;
 	error: any;
+	defaultValue?: any;
 };
 
 const TextField = ({
@@ -32,6 +33,7 @@ const TextField = ({
 	name,
 	rules,
 	error,
+	defaultValue
 }: TextFieldProps) => {
 	const divStyle:React.CSSProperties = {
 		width: width,
@@ -71,6 +73,7 @@ const TextField = ({
 				type={type}
 				placeholder={placeholder}
 				className={`basic-tf ${className || ''}`}
+				defaultValue={defaultValue}
 			/>
 		</div>
 	);

@@ -57,9 +57,10 @@ const FormlessDropdown = ({
                     id={name}
 					className={`basic-dropdown ${className || ''}`}
 					style={{
-						width: '100%',
+						width: 'auto',
 						height: '100%',
 						color: color,
+						boxSizing:'border-box'
 					}}
 				>
 					{options.map((option, index) => (

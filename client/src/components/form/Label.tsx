@@ -6,14 +6,15 @@ type labelProps = {
 	color?: string;
 	fontWeight?: string;
 	className?:string;
+	onClick?: any;
 };
-const Label = ({ children, fontSize = styles.fbase, color=styles.black, fontWeight='300', className='' }: labelProps) => {
+const Label = ({ children, fontSize = styles.fbase, color=styles.black, fontWeight='300', className='', onClick}: labelProps) => {
 	const style = {
 		fontSize: fontSize,
 		color: color,
 		fontWeight:fontWeight
 	};
 
-	return <div style={style} className={className}>{children}</div>;
+	return <div onClick={onClick} style={style} className={className}>{children}</div>;
 };
 export default Label;

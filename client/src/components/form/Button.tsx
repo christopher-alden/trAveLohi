@@ -12,7 +12,7 @@ type ButtonProps = {
 const Button = ({ children, onClick, className='', submit, victor=false }: ButtonProps) => {
     const type = submit ? 'submit' : 'button'
     return (
-        <button type={type} className={`button ${className}`} onClick={onClick} disabled={victor}>
+        <button type={type} className={`button ${className} ${victor ? 'invert-btn':''}`} onClick={onClick} disabled={victor}>
             {children}
         </button>
     );

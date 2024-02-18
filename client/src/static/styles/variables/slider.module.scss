@@ -1,21 +1,37 @@
-/* slider.module.scss */
-.slide {
-    width: 100%;
-    height: 100%;
+@import '../variables/variables.styles.scss';
+
+.slider{
     position: relative;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    overflow-x: scroll;
 }
 
-.slide.active {
-    opacity: 1;
+.slider::-webkit-scrollbar {
+    display: none;
 }
 
-.slideInfoHeader{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    bottom: 0;
+.sliderCard{
+    position: relative;
+    flex-shrink: 0;
+    .sliderInfo{
+        position: absolute;
+        .sliderValid{
+            justify-content: end;
+            align-items: end;
+            .sliderValidText{
+                @include br($br-xs);
+            }
+        }
+        .sliderDetails{
+            justify-content: end;   
+            .sliderDesc{
+                max-width: 70%;
+                flex-wrap: wrap;
+                word-wrap: break-word;
+            }
+        }
+    }
 }
-
-/* Additional styles as needed */

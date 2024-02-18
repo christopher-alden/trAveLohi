@@ -3,6 +3,10 @@
 .push-navbar{
     margin-top: 100px
 }
+
+.flex-grow{
+    flex-grow: 1
+}
 .basic-container{
     @include padding(3rem, 2rem);
     display: flex;
@@ -25,22 +29,68 @@
 }
 
 .softblur{
-    backdrop-filter: blur(0.25rem);
+    backdrop-filter: blur(0.5rem);
 }
 
-.search-container{
-    @include br($br-m);
-    margin-top: -350px;
+.search-parent{
+    @include center-flex;
+    flex-direction: column;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+
+    .search-container{
+        @include br($br-m);
+        margin-top: -350px;
+        input{
+            background-color: transparent;
+            outline: none;
+        }
+        .result{
+            // position: relative;
+            // top: 0;
+            margin-top: 60px;
+            cursor: pointer;
+            align-items: start;
+        }
+    }
 }
+
+.search-results{
+    width: 100%;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.01);
+    }
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
 
 .bg-dim{
     background-color: rgba(0, 0, 0, 0.8);
+}
+.bg-soft-dim{
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.bg-soft-soft-dim{
+    background-color: rgba(0, 0, 0, 0.4);
 }
 .no-br{
     @include br(0px)
 }
 
+.bg-secondaryWhite{
+    background-color: $secondary-white;
+}
+.bg-notthatwhite{
+    background-color: rgb(243, 243, 243);
+}
+
 .fixed{
+    top: 0;
+    left: 0;
     position: fixed;
 }
 .bg-white{
@@ -48,6 +98,11 @@
 }
 .bg-black{
     background-color: $black;
+}
+
+
+.bg-black-black{
+    background-color: rgb(16, 15, 15);
 }
 
 .ontop{
@@ -58,9 +113,13 @@
 .full-cflex{
     @include center-flex;
     width: 100%;
+    // height: 100%;
 }
 .z1000{
     z-index: 1000;
+}
+.z1{
+    z-index: 1;
 }
 
 .zbelownav{
@@ -69,10 +128,18 @@
 .no-padding{
     @include padding(0px,0px);
 }
+.no-padding-l{
+    padding-left: 0px;
+}
 .shadow{
     box-shadow:
-    3.1px 3.8px 9.5px rgba(0, 0, 0, 0.039),
-    25px 30px 76px rgba(0, 0, 0, 0.07);
+    2.5px 1.6px 6.9px rgba(0, 0, 0, 0.02),
+    6.1px 3.9px 16.6px rgba(0, 0, 0, 0.028),
+    11.5px 7.3px 31.3px rgba(0, 0, 0, 0.035),
+    20.5px 13px 55.8px rgba(0, 0, 0, 0.042),
+    38.4px 24.2px 104.4px rgba(0, 0, 0, 0.05),
+    92px 58px 250px rgba(0, 0, 0, 0.07);
+;
 }
 .space-between{
     justify-content: space-between;
@@ -84,7 +151,13 @@
 .navbar{
     top: 0;
     background: rgb(0,0,0);
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 20%, rgba(19, 19, 19, 0.6) 100%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 10%, rgba(19, 19, 19, 0.8) 100%);
+    transition: all 0.5s ease-in-out;
+    
+}
+
+.no-nav{
+    top: -100px;
 }
 .text-center{
     text-align: center;
@@ -99,8 +172,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
     justify-content: center;
     align-items: center;
     &.open {
@@ -159,10 +230,16 @@
     line-height: 4rem;
 }
 
+.lh-5xl{
+    line-height: 5.5rem;
+}
+.lh-3xl{
+    line-height: 2rem;
+}
 .top-bottom-gradient{
     box-sizing: border-box;
     background: rgb(0,0,0);
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, rgba(255,255,255,00) 85%, rgba(0, 0, 0, 0.6) 100%,);
+    background: linear-gradient(0deg, rgba(26, 26, 26, 1) 0%, rgba(0,0,0,0 ) 85%, rgba(0, 0, 0, 0.6) 100%,);
 }
 
 .icon-scale{
@@ -176,3 +253,247 @@
     opacity: 0.5;
 }
 
+.translate-up{
+    margin-bottom: 200px;
+}
+
+.floating-island-ctr{
+    position:absolute;
+    margin-top: -150px;
+
+    .floating-island{
+        @include br($br-s);
+    }
+    .floating-btn{
+        position: absolute;
+        width: 250px;
+        padding-inline: $g-8;
+        right: 75px;
+        bottom: -30px;
+    }
+}
+.no-outline{
+    outline: none;
+}
+
+.outline{
+    outline: 1px solid $black;
+}
+
+.outline-less{
+    outline: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.outline-container{
+    outline: 2px solid #60606040;;
+}
+
+.outline-secondary{
+    outline: 1px solid $secondary-black
+}
+.no-wrap{
+    flex-wrap: nowrap;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.overflow{
+    overflow-x: visible;
+}
+
+
+.frieren{
+    position: absolute;
+    bottom: 0px;
+    left: 25px;
+    width: 150px;
+    height: 300px;
+}
+
+.border-box{
+    box-sizing: border-box;
+}
+
+.br-bento{
+    @include br($br-l)
+}
+
+.c-white{
+    color: $white;
+}
+
+.bg-black-gradient{
+    background: rgb(26,26,26);
+    background: linear-gradient(315deg, rgba(26,26,26,0.1) 20%, rgba(33,33,33,0.6) 100%);
+}
+
+.bg-transparent{
+    background-color: transparent;
+}
+
+
+.text-left{
+    width: 100%;
+    text-align: left;
+}
+
+.scroll-y{
+    overflow-y: scroll;
+}
+
+.sticky{
+    top: 0;
+    position: sticky;
+    position: -webkit-sticky;
+}
+
+.items-center{
+    align-items: center;
+}
+.justify-center{
+    justify-content: center;
+}
+
+.none{
+    position: absolute;
+    visibility: hidden;
+    width: 1px;
+    height: 1px;
+    z-index: -1;
+}
+
+.relative{
+    position: relative;
+    // display: inline-block;
+}
+.z1{
+    z-index: 1;
+}
+.z2{
+    z-index: 2;
+}
+
+.cutoutWrapper {
+    z-index: 0;
+    width: 100%; /* Adjust based on the size of your widget */
+    height: 100%; 
+    position: absolute;
+    overflow: hidden;
+}
+
+.cutoutWrapper:before {
+    content: '';
+    position: absolute;
+    bottom: 50%; /* Adjust to control the vertical position of the cutout */
+    right: -3%;
+    width: 150px;
+    height: 150px;
+    border-radius:45%; /* This creates a circular cutout. Adjust for other shapes */
+    box-shadow: 0 0 0 2000px $white; /* Adjust the shadow size and color */
+    transform: translateY(50%); /* Adjust based on cutout position */
+}
+
+
+.drop-shadow {
+    -webkit-filter: drop-shadow(0px 0px 40px rgba(0,0,0,0.4));
+    filter: drop-shadow(0px 0px 40px rgba(0,0,0,0.4));
+}
+
+.word-wrap{
+    flex-wrap: wrap;
+    word-wrap: break-word;
+}
+
+.items-start{
+    align-items: start;
+}
+
+.items-end{
+    align-items: end;
+}
+
+
+.justify-end{
+    justify-content: end;
+}
+
+.footer-ctr{
+
+    .main-text{
+        letter-spacing: -0.1rem;
+    }
+    .footer{
+        flex-shrink: 1;
+        overflow-x: hidden;
+        text-align: center;
+    
+    }
+    
+    .lh-footer{
+        line-height: 0;
+        display: flex;
+        flex-shrink: 1;
+        white-space: nowrap;
+        letter-spacing: calc(-1rem + -0.25rem);
+        box-sizing: border-box;
+        font-size: 26vw;
+        color: $white;
+    }
+    .parallax {
+        background-image: url("../../assets/footer2.jpg");
+        filter: brightness(60%) contrast(110%);
+        min-height: 500px;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+}
+.toggle-container {
+    display: flex;
+    align-items: center;
+    width: 200px;
+    height: fit-content;
+    transition: all 0.3s ease-in-out;
+    gap: $g-2;
+}
+
+
+.transition{
+    transition: all 0.3s ease-in-out;
+}
+
+.toggle-container:hover {
+    transition: transform 0.3s ease;
+}
+
+
+.circle{
+    border-radius: 100%;
+}
+
+.flight-path {
+    border: 0;
+    width: 2px;
+    height: 80px;
+    // background-color:$secondary-white;
+    background-image: linear-gradient(to top, $secondary-white 33%, rgba(255,255,255,0) 0%);
+    background-position: top;
+    background-size: 2px 10px;
+    background-repeat: repeat-y;
+}
+
+.mt-2{
+    margin-top: 1rem;
+}
+
+.min-h-full{
+    min-height: 100vh;
+}
+
+.optical-center-logo{
+    margin-left: -20px;
+}

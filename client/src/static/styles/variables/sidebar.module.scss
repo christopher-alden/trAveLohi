@@ -1,0 +1,14 @@
+@import './variables.styles.scss';
+
+
+.sidebarMenu{
+    transition: all 0.2s ease-in-out;
+    
+    &:hover{
+        transform: translateX(10px);
+    }
+}
+.active{
+    transform: translateX(10px);
+    color: black;
+}

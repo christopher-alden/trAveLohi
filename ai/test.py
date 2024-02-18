@@ -60,6 +60,6 @@ testing = GeoGuesserTest('Dataset/test','geoguesser_65.keras')
 # testing.preprocess_test()
 
 
-test_accuracy = testing.test('test', batch_size=24)
+test_accuracy = testing.test('valid', batch_size=24)
 
 print(f'Test Accuracy: {test_accuracy}')

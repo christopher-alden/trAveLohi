@@ -1,4 +1,5 @@
 from ALnet import ALnet
+import tensorflow as tf
 from tensorflow import keras
 from keras.preprocessing import image
 import numpy as np
@@ -91,6 +92,7 @@ class GeoGuesser:
     #PREPROCESSING
 
     #UTILS
+    @tf.function
     def step_decay(self, epoch):
             initial_lrate = 0.0001
             drop = 0.5
@@ -112,7 +114,8 @@ class GeoGuesser:
                 f.write(f"Images in {category}: {len(img_list)}\n")
             f.write(f"Unreadable Images: {error_count}")
     #UTILS
-    
+            
+    @tf.function
     def predict_location_pathbase(self, model_path, img_path):
         model = keras.models.load_model(model_path)
         img_array = self.load_and_preprocess_image_pathbase(img_path)
@@ -120,7 +123,7 @@ class GeoGuesser:
         predicted_class = np.argmax(predictions, axis=1)
         return predicted_class[0]
     
-
+    @tf.function
     def predict_location(self, model_path, img_array):
         model = keras.models.load_model(model_path)
         predictions = model.predict(img_array)

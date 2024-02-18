@@ -13,6 +13,7 @@ type DateInputProps = {
 	rules: any;
 	error: any;
 	name: string;
+	// defaultValue?: Date;
 };
 
 const DatePicker = ({
@@ -25,6 +26,7 @@ const DatePicker = ({
 	width = 'fit-content',
 	height = 'fit-content',
 	color = styles.black,
+	// defaultValue,
 }: DateInputProps) => {
 	const  divStyle:React.CSSProperties = {
 		width: width,
@@ -66,13 +68,14 @@ const DatePicker = ({
 				name={name}
 				id={name}
 				type="date"
-				className={`basic-date-input ${className || ''}`}
+				className={`basic-date-input darkmode ${className || ''}`}
 				{...register(name, rules)}
 				style={{
 					width: '100%',
 					height: '100%',
 					color: color,
 				}}
+				// defaultValue={defaultValue}
 			/>
 		</div>
 	);

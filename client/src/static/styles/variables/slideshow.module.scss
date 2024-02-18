@@ -1,0 +1,19 @@
+
+.slideshow {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    .active {
+        opacity: 1;
+    }
+}
+
+.slideshowInfoContainer{
+    position: relative;
+    .slideshowInfoHeader{
+        position: absolute;
+        bottom: 125px;
+    }
+}

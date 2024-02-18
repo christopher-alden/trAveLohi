@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import close from '@icons/close-icon-black.png';
-// import '@styles/generic-styles/dialog.styles.scss';
 import '@styles/generic-styles/container.styles.scss';
 import styles from '@styles/global.module.scss';
 
@@ -20,7 +19,7 @@ const Dialog = ({open, onClose, title, children}: dialogProps) => {
 	return (
 		<>
 			{open && (
-				<div className={`popup ${open ? 'open' : ''}`}>
+				<div className={`popup bg-dim softblur z1000 ${open ? 'open' : ''}`}>
 					<div
 						className="overlay"
 						onClick={onClose}

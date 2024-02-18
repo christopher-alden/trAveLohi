@@ -2,7 +2,7 @@
 
 .background-image {
     @include image-cover;
-    opacity: 0.3;
+    filter: brightness(30%);
     // position: absolute;
     top: 0;
     left:0;
@@ -11,7 +11,9 @@
 }
 
 .image{
-    @include image-cover
+    
+    @include image-cover;
+    box-sizing: border-box;
 }
 
 .zoom-in-out{
@@ -36,3 +38,25 @@
         scale: 1;
     }
 }
+
+.baseline{
+    object-position: bottom;
+}
+.clip{
+    overflow: hidden;
+}
+
+
+.invert{
+    filter: invert(1);
+}
+.invert-soft{
+    filter: invert(0.6);
+}
+.invert-btn img{
+    filter: invert(0.6);
+}
+.newdim{
+    filter: brightness(40%) contrast(105%);
+}
+

@@ -1,51 +1,56 @@
-import {useRef, useState} from 'react';
+import {useMutation} from 'react-query';
+
+type SendEmailArgs = {
+	email: string;
+	api: string;
+	subject: string;
+};
+
+export type EmailSetup = {
+	email: string,
+	api: string,
+	subject: string,
+	onSuccess?: () => void,
+	onError?: (error: any) => void
+};
+
+// To use should call setupEmail which encapsulates sendEmail function. 
+// set the Email, APi, and Subject.
+// If needed to use onSuccess or onError to do further actions, please define in the EmailSetup props
 
 const useSendEmail = () => {
-	const [loading, setLoading] = useState<boolean>(false);
-	const userEmailRef = useRef<string | undefined>();
-	const apiRef = useRef<string | undefined>();
+	const {
+		mutate: sendEmail,
+		isLoading,
+		error,
+	} = useMutation(async ({email, api, subject}: SendEmailArgs) => {
+		if (!api || !email) throw new Error('API endpoint or email is missing');
 
-	const sendEmail = async (subject:string) => {
-		if (!apiRef.current || !userEmailRef.current ) {
-			return;
-		}
+		const response = await fetch(api, {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({
+				subject,
+				to: email,
+			}),
+		});
 
-		try {
-			
-			setLoading(true)
-			const res = await fetch(apiRef.current, {
-            method: 'POST',
-				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify({
-					subject: subject,
-					to: userEmailRef.current,
-				}),
-			});
+		if (!response.ok) throw new Error('Failed to send email');
+		return await response.json();
+	});
 
-			const data = await res.json();
-
-			setLoading(false);
-			if (res.ok) {
-				console.log("bus")
-			} else {
-				console.error('Failed to send email');
-			}
-
-			return data.message
-
-		} catch (error) {
-			console.error('Error sending email:', error);
-		}
-		setLoading(false);
+	const setupEmail = ({email, api, subject, onSuccess, onError}:EmailSetup) => {
+		sendEmail({ email, api, subject }, {
+			onSuccess: () => {
+				if (onSuccess) onSuccess();
+			},
+			onError: (error) => {
+				if (onError) onError(error);
+			},
+		});
 	};
 
-	const setEmailAndApi = (userEmail: string, api: string, subject:string) => {
-		userEmailRef.current = userEmail;
-		apiRef.current = api;
-		return sendEmail(subject);
-	};
-
-	return {setEmailAndApi, loading};
+	return {setupEmail, isLoading, error};
 };
 
 export default useSendEmail;

@@ -1,22 +1,22 @@
 export const NavbarRoutes = [
     {
-        element: "Home",
+        name: "Home",
         path:'/',
     },
     {
-        element: "Explore",
+        name: "Explore",
         path:'/explore',
     },
     {
-        element: "My Reservations",
+        name: "My Reservations",
         path:'/reservations',
     },
     {
-        element: "Geo Guesser",
+        name: "Geo Guesser",
         path:'/geoguesser',
     },
     {
-        element: "History",
+        name: "History",
         path:'/reservations',
     },
 

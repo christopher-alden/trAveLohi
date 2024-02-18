@@ -10,9 +10,10 @@ type containerProps = {
     px?:string;
     py?:string;
     className?: string;
+	onClick?:any
 };
 
-const Container = ({ children, width='fit-content', height='fit-content', center, gap, direction, px , py, className }: containerProps) => {
+const Container = ({ children, width='fit-content', height='fit-content', center, gap, direction, px , py, className, onClick }: containerProps) => {
 
 	const style = {
 		width: width,
@@ -29,6 +30,7 @@ const Container = ({ children, width='fit-content', height='fit-content', center
 
 	return (
 		<div
+			onClick={onClick}
 			className={`${cn} ${className || ''}`}
 			style={style}>
 			{children}

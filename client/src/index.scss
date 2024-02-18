@@ -5,6 +5,12 @@
 *{
   margin: 0px;
   padding: 0px;
+  // border: rgba(255, 0, 0, 0.366) 0.1px dashed;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  letter-spacing: -0.01rem;
+
   
 }
 button{
@@ -17,7 +23,7 @@ input{
   font-family: suisse;
   box-sizing: border-box;
   border: none;
-  outline: 1px solid black;
+  outline: 1px solid $black;
   background-color: $white;
 }
 
@@ -34,6 +40,7 @@ select
   appearance: none;
   background-color: $white;
 }
+
 
 select.paddingOffset
 {
@@ -74,7 +81,7 @@ form{
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 2px;
 }
 
 

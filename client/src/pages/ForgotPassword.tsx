@@ -90,6 +90,7 @@ const ForgotPassword = () => {
 				direction={'column'}
 				center={true}
 				px="0"
+				className='optical-center-logo'
 			>
                 <Picture src={fullLogo} width='200px'/>
 			</Container>
@@ -101,7 +102,7 @@ const ForgotPassword = () => {
 				px="0px"
                 py="0px"
 			>
-                <Container px='0px' py='0px' width='30%'>
+                <Container px='0px' py={styles.g4} width='30%'>
                     <Link to='/login' className='link-with-icon'>
                         <Picture width='25px' src={arrow}/>
                         <Label fontSize={styles.fxl} color={styles.white}>Back to Login</Label>

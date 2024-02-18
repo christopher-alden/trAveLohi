@@ -37,7 +37,9 @@ func SendWelcomeEmailHandler(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to send email")
 	}
 
-	return c.SendString("Email sent successfully")
+	return c.JSON(fiber.Map{
+		"message": "Success",
+	})
 }
 
 
@@ -53,7 +55,8 @@ func SendOTPEmailHandler(c *fiber.Ctx) error {
 
 	var user models.User
 
-	database.DB.Where("email = ?", request.To).First(&user)
+	db:= database.GetDB()
+	db.Where("email = ?", request.To).First(&user)
 
 	if user.ID == 0 {
 		c.Status(fiber.StatusNotFound)
@@ -64,7 +67,7 @@ func SendOTPEmailHandler(c *fiber.Ctx) error {
 
 	var otp models.OTP
 
-	database.DB.Where("user_id = ?", user.ID).First(&otp)
+	db.Where("user_id = ?", user.ID).First(&otp)
 
 	newOTP := generateOTP()
 
@@ -76,11 +79,11 @@ func SendOTPEmailHandler(c *fiber.Ctx) error {
 			OTP:       newOTP,
 			ExpiresAt: expirationTime,
 		}
-		database.DB.Create(&otp)
+		db.Create(&otp)
 	} else {
 		otp.OTP = newOTP
 		otp.ExpiresAt = expirationTime
-		database.DB.Save(&otp)
+		db.Save(&otp)
 	}
 
 	htmlContent, err := os.ReadFile("./mail/OTP.html")

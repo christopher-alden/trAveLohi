@@ -15,6 +15,10 @@ import Dialog from '@comp/container/Dialog';
 import OTPInput from '@comp/form/OTPInput';
 import { UserContext } from 'src/context/userContext';
 import { UserOTP } from '@myTypes/user.types';
+import { useMutation } from 'react-query';
+import { queryClient } from 'src/App';
+import  useSendEmail, { EmailSetup } from 'src/hooks/useSendEmail';
+import { ApiEndpoints } from '@util/api.utils';
 
 
 const OPEN_SUCCESS_DIALOG = 'OPEN_SUCCESS_DIALOG';
@@ -46,12 +50,17 @@ const dialogReducer = (state:any, action:any) => {
     }
 };
 
+// There will be 2 states of validating the email & sending OTP
+// Once email is validated then OTP is sent and user will be requested to enter the OTP
+
 const OTP = () => {
+    const { loading, loginOTP } = useContext(UserContext);
     const { register: emailRegister, formState: { errors: emailError }, handleSubmit: emailSubmit, reset: resetEmailForm } = useForm();
+    const { setupEmail, isLoading:sendEmailLoading } = useSendEmail();
+
     const [emailSent, setEmailSent] = useState(false);
     const [email, setEmail] = useState<string>('');
     const [enteredOTP, setEnteredOTP] = useState<string>('');
-    const { sendOTP, loading, loginOTP } = useContext(UserContext);
     const navigate = useNavigate()
     const redirectDuration = 3000
 
@@ -63,23 +72,37 @@ const OTP = () => {
         successDialogOpen: false,
         failureDialogOpen: false,
     });
+    const closeDialog = () => {
+        dispatch({ type: CLOSE_DIALOG });
+    };
 
+    const { mutate: loginOtpUser, error, isLoading } = useMutation<any, Error, UserOTP>(loginOTP, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('userData');
+            dispatch({ type: OPEN_SUCCESS_DIALOG });
+            delayNavigate()
+        },
+        
+    });
 
+    // The async state will be managed on the useSendEmail
     const onEmailSubmit = async (data: any) => {
-        try {
-            const res = await sendOTP(data.email);
-
-            if (res == "Success") {
+        const emailArgs:EmailSetup = {
+            email:data.email,
+            api: ApiEndpoints.EmailSendOTP,
+            subject: "trAveLohi OTP Code",
+            onSuccess: () => {
+                console.log(data.email)
                 setEmailSent(true);
                 setEmail(data.email);
                 resetEmailForm();
-                
-            } else {
+            },
+            onError: (error) =>{
+                console.error('Error sending email:', error);
                 dispatch({ type: OPEN_FAILURE_DIALOG });
             }
-        } catch (error) {
-            dispatch({ type: OPEN_FAILURE_DIALOG });
         }
+        setupEmail(emailArgs)
     };
 
     const onOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,23 +111,20 @@ const OTP = () => {
             email: email,
             OTP: enteredOTP,
         };
-        const res = await loginOTP(otpUser);
-
-        if(res == 'Success'){
-            dispatch({ type: OPEN_SUCCESS_DIALOG });
-            const timer = setTimeout(() => {
-                navigate('/');
-            }, redirectDuration);
-
-            return () => clearTimeout(timer);
-        }
-        console.log(res)
+        loginOtpUser(otpUser)
     };
 
-    const closeDialog = () => {
-        dispatch({ type: CLOSE_DIALOG });
-    };
 
+    // Ux shit
+    const delayNavigate = () => {
+        const timer = setTimeout(() => {
+            navigate('/');
+        }, redirectDuration);
+
+        return () => clearTimeout(timer);
+    }
+
+    if(sendEmailLoading)return <>Email is fucking loading</>
 
     return (
         <>
@@ -122,6 +142,7 @@ const OTP = () => {
                 direction={'column'}
                 center={true}
                 px="0"
+                className='optical-center-logo'
             >
                 <Picture src={fullLogo} width='200px' />
             </Container>
@@ -133,7 +154,7 @@ const OTP = () => {
                 px="0px"
                 py="0px"
             >
-                <Container px='0px' py='0px' width='30%'>
+                <Container px='0px' py={styles.g4} width='30%'>
                     <Link to='/login' className='link-with-icon'>
                         <Picture width='25px' src={arrow} />
                         <Label fontSize={styles.fxl} color={styles.white}>Back to Login</Label>
