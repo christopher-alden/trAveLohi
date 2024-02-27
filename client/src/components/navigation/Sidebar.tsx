@@ -11,7 +11,7 @@ type sidebarProps = {
 const Sidebar = ({children, label}:sidebarProps) =>{
     return(
         <Bento width="400px" height='100%'>
-            <Container px={styles.g8} py={styles.g8} direction="column" gap={styles.g4}  width="100%" height='100%' className="bg-black-gradient outline-secondary br-bento">
+            <Container px={styles.g8} py={styles.g8} direction="column" gap={styles.g4}  width="100%" height='100%' className="bg-black-gradient outline-secondary no-br">
                 <Label color={styles.white} fontSize={styles.f3xl}>{label}</Label>
                 <Container direction="column" width="100%"  px="0px" py="0px" gap={styles.g4}>
                     {children}

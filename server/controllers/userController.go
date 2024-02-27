@@ -90,3 +90,40 @@ func GetAllUser(c *fiber.Ctx) error{
     return c.JSON(users)
 
 }
+
+
+// func CreateUserTransaction(c *fiber.Ctx) error{
+// 	var request struct{
+// 		UserID          uint      `json:"userId"`
+// 		Price           uint      `json:"price"`
+// 		TransactionDate string `json:"transactionDate"`
+// 		Status string `json:"status"`
+// 	}
+
+// 	if err := c.BodyParser(&request); err != nil {
+// 		c.Status(fiber.StatusBadRequest)
+// 		return c.JSON(fiber.Map{"message": "Failed request"})
+// 	}
+
+// 	transactionDate, err := time.Parse("2006-01-02T15:04:05.000Z", request.TransactionDate)
+// 	if err != nil {
+// 		fmt.Println("error in departure time parsing", err)
+// 		return err
+// 	}
+
+// 	db := database.GetDB()
+
+// 	userTransaction := models.UserTransaction{
+// 		UserID: request.UserID,
+// 		Price: request.Price,
+// 		TransactionDate: transactionDate,
+// 		Status: request.Status,
+// 	}
+// 	db.Create(&userTransaction)
+
+
+// 	return c.JSON(fiber.Map{
+// 		"message": "Success",
+// 		"userTransaction": userTransaction,
+// 	})
+// }

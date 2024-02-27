@@ -7,15 +7,14 @@ import (
 )
 
 type Airplane struct {
-    gorm.Model
-    Code        string      `gorm:"type:varchar(5);not null" json:"code"`
-    AirlineID   uint        `gorm:"not null" json:"airlineId"`
-    Type        string      `gorm:"type:varchar(100);not null" json:"type"`
-    IsAvailable bool        `gorm:"default:true" json:"isAvailable"`
-    Airline     Airline     `gorm:"foreignKey:AirlineID" json:"airline"`
-    SeatDetails []SeatDetail `gorm:"foreignKey:AirplaneID" json:"seatDetails,omitempty"`
+	gorm.Model
+	Code        string       `gorm:"type:varchar(5);not null" json:"code"`
+	AirlineID   uint         `gorm:"not null" json:"airlineId"`
+	Type        string       `gorm:"type:varchar(100);not null" json:"type"`
+	IsAvailable bool         `gorm:"default:true" json:"isAvailable"`
+	Airline     Airline      `gorm:"foreignKey:AirlineID" json:"airline"`
+	SeatDetails []SeatDetail `gorm:"foreignKey:AirplaneID" json:"seatDetails,omitempty"`
 }
-
 
 // Each Airline has an []AirlineRoutes and []Airplanes and []Flights
 // : this means airline have its own routes, has an inventory of airplanes
@@ -60,21 +59,16 @@ type FlightRoute struct {
 	Airlines         []Airline `gorm:"many2many:airline_flight_routes;" json:"airlines,omitempty"`
 }
 
-// [MASTER] this will be used for ticket and hotel registration.
-type Traveler struct {
-	gorm.Model
-	FirstName      string    `gorm:"type:varchar(50)" json:"firstName"`
-	LastName       string    `gorm:"type:varchar(50)" json:"lastName"`
-	PassportNumber string    `gorm:"type:varchar(12);unique;not null" json:"passportNumber"`
-	DateOfBirth    time.Time `gorm:"type:date" json:"dob"`
-}
-
 // [HEADER] This holds all the main headers regarding to flights
 // : Flight related to User should be found in FlightTransactions
 // : A Trigger will decide DepartureTime and ArrivalTime from the interval of FlightRoutes-FlightDuration ...
 //
 //	from AirlineRoute
 //
+// Untuk flight DepartureTime dan Arrifval time refer kepada flight itu saja
+// Saat create akan juga ada departureDate dan rerturnDate, kolom tersebut untuk menentukan
+// : kapan pesawat pergi dan balik bukan kapan berangkat dan sampai
+// : arrivalTime harusnya ditentukan oleh business logic departureTime + flightRoute.duration
 // : Status is flight status of 'on-going', 'cancelled', idc about 'delayed'
 type Flight struct {
 	gorm.Model
@@ -105,7 +99,7 @@ type FlightTransaction struct {
 	TravelerID        uint   `gorm:"not null" json:"travelerId"`
 	SeatID            uint   `gorm:"not null" json:"seatId"`
 	IsRoundTrip       bool   `gorm:"default:true" json:"isRoundTrip"`
-	Status            string `gorm:"type:varchar(50)" json:"status"`
+	Baggage           uint   `gorm:"nullable" json:"baggage"`
 
 	Flight          Flight          `gorm:"foreignKey:FlightID" json:"flight,omitempty"`
 	UserTransaction UserTransaction `gorm:"foreignKey:UserTransactionID" json:"userTransaction,omitempty"`
@@ -113,44 +107,32 @@ type FlightTransaction struct {
 	Traveler        Traveler        `gorm:"foreignKey:TravelerID" json:"traveler,omitempty"`
 }
 
-// [TRANSACTION HEADER] This should hold each Transaction (Flight and Hotel) that respective Users made
-// : To identify if user made a transaction to Flight or Hotel, we can directly access the corresponding TransactionID
-// : This should be created first when inserting any type of Transaction
-// : Price is the grand total of the transaction made by User, it should be referenced ...
-// to SeatDetails-Class, FlightRoutes-Price, amount of tickets bought in a transaction to get the final price or some shit idk
-type UserTransaction struct {
-	gorm.Model
-	UserID          uint      `gorm:"not null" json:"userId"`
-	Price           uint      `gorm:"not null" json:"price"`
-	TransactionDate time.Time `gorm:"type:timestamp" json:"transactionDate"`
-}
-
 // ======
 
 type FlightRouteResponse struct {
-    ID               int64 `json:"id"` 
-    DepartureAirport struct {
-        Name    string `json:"name"`
-        Code    string `json:"code"`
-        Country string `json:"country"`
-        City    string `json:"city"`
-    } `json:"departureAirport"`
-    ArrivalAirport struct {
-        Name    string `json:"name"`
-        Code    string `json:"code"`
-        Country string `json:"country"`
-        City    string `json:"city"`
-    } `json:"arrivalAirport"`
-    Price          int64 `json:"price"` 
-    FlightDuration int64 `json:"flightDuration"`
+	ID               int64 `json:"id"`
+	DepartureAirport struct {
+		Name    string `json:"name"`
+		Code    string `json:"code"`
+		Country string `json:"country"`
+		City    string `json:"city"`
+	} `json:"departureAirport"`
+	ArrivalAirport struct {
+		Name    string `json:"name"`
+		Code    string `json:"code"`
+		Country string `json:"country"`
+		City    string `json:"city"`
+	} `json:"arrivalAirport"`
+	Price          int64 `json:"price"`
+	FlightDuration int64 `json:"flightDuration"`
 }
 
-type AirlineResponse struct{
-	ID int64 `json:"id"`
+type AirlineResponse struct {
+	ID   int64  `json:"id"`
 	Name string `json:"name"`
 }
 
 type FlightDate struct {
 	DepartureTime string `json:"departureTime"`
-	ArrivalTime string `json:"arrivalTime"`
+	ArrivalTime   string `json:"arrivalTime"`
 }

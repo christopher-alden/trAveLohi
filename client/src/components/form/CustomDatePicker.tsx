@@ -50,8 +50,8 @@ const CustomDatePicker = ({ setTime, mainTheme=true}:CustomDatePickerProps) => {
     return (
         <div className="relative">
             <Container direction="column" className="no-padding"  onClick={handleClick}>
-                <Label color={mainTheme ? styles.black: styles.white}fontSize={styles.f3xl} fontWeight="700">{displayDate || 'Select Date'}</Label>
-                <Label color={mainTheme ? styles.black: styles.white} >{displayDay || ''}</Label>
+                <Label color={mainTheme ? styles.black: styles.white}fontSize={styles.f3xl} >{displayDate || 'Select Date'}</Label>
+                <Label color={mainTheme ? styles.secondaryWhite: styles.white} >{displayDay || ''}</Label>
             </Container>
             <input
                 id="date-picker"

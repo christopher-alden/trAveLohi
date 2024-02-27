@@ -48,9 +48,10 @@ const ManageUser = () =>{
                 isBanned: user.IsBanned,
                 isNewsletter: user.IsNewsletter,
             }));
-            setEnableFetch(false);
             setUsers(prevUsers => [...prevUsers, ...transformedData]);
+            setEnableFetch(false);
             updateOffset();
+
         },
         onError: (error) => {
             console.error(error);
@@ -62,12 +63,10 @@ const ManageUser = () =>{
     useEffect(() => {
         if (isIntersecting && !userLoading && !error) {
             setEnableFetch(true);
+
         }
     }, [isIntersecting, offset, userLoading]);
 
-    useEffect(() => {
-        setLimit(1); 
-    }, []);
 
     const changeUser = (user:UserModel) =>{
         setChosenUser(user)

@@ -39,10 +39,10 @@ const Slideshow = ({content}:slideshowProps) => {
             </Container>
 
             <Container px="0px"py="0px" width="100%" height='100%'  className={`${ss.slideshowInfoContainer} `}>
-                <Container width='100%' height='fit-content' direction='column' gap={styles.g4} className={`${ss.slideshowInfoHeader} `}>
+                <Container width='100%' height='fit-content' direction='column' gap={styles.g2} className={`${ss.slideshowInfoHeader} `}>
                     <Container direction='column' px='0px' py='0px'>
-                        <Label className='lh-6xl' fontWeight='700' color={styles.white} fontSize={styles.f6xl}>{nextImage.location}</Label>
                         <Label  color={styles.white} fontSize={styles.f3xl}>{nextImage.country}</Label>
+                        <Label className='lh-8xl ls-8xl'  color={styles.white} fontSize={styles.f8xl}>{nextImage.location}</Label>
                     </Container>
                     <Label   color={styles.white} fontSize={styles.fxl}>{nextImage.description}</Label>
                 </Container>

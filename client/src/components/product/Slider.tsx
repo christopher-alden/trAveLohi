@@ -10,12 +10,13 @@ import React from "react"
 type sliderProps = {
     children:React.ReactNode
     label?:string
+    gap?:string
 }
-const Slider = ({children, label}:sliderProps) =>{
+const Slider = ({children, label, gap=`${styles.g4}`}:sliderProps) =>{
     return(
         <>
-            <Container width="100%" px="0px" py="0px" center className="space-between">
-                <Label  fontSize={styles.f3xl}>{label}</Label>
+            <Container width="100%" px="0px" py="0px" center className="space-between ">
+                <Label className="ls-5xl lh-5xl"  fontSize={styles.f5xl}>{label}</Label>
                 <Container px='0px' py='0px' className="" >
                     <Link to='/register' className='no-padding link-with-icon right'>
                         <Label  color={styles.black}>View More</Label>
@@ -25,7 +26,7 @@ const Slider = ({children, label}:sliderProps) =>{
             </Container>
             
             
-            <Container className={`${ss.slider} no-br`} width="100vw" py="0px" gap={styles.g4}>
+            <Container className={`${ss.slider} no-br`} width="100vw" py="0px" gap={gap}>
                 {children}
             </Container>
         </>

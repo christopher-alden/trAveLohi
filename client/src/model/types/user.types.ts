@@ -32,3 +32,29 @@ export type UserOTP = {
     email:string,
     OTP: string,
 }
+
+export interface Traveler{
+    ID?: number,
+    firstName: string,
+    lastName: string,
+    passportNumber: string,
+    dateOfBirth: Date,
+}
+
+
+export type UserTransaction = {
+    ID?:number,
+    userId:number,
+    price:number,
+    transactionDate:Date
+    status:TransactionType
+}
+
+export enum TransactionType {
+    Cart = 'cart',
+    Completed = 'completed',
+    Cancelled = 'cancelled',
+    Refunded = 'refunded',
+    Pending = 'pending'
+}
+

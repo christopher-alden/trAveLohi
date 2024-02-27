@@ -8,7 +8,7 @@ export enum ApiEndpoints {
     UserLogout = 'http://localhost:8000/api/logout',
     GeoGuesser = 'http://localhost:5000/geoguesser-guess',
     UserValidateEmail = 'http://localhost:8000/api/validate-reset-password-email',
-    AirportSearch = 'http://localhost:8000/api/get-airports',
+    AirportSearch = 'http://localhost:8000/api/search-airports',
     PromoCreate = 'http://localhost:8000/api/create-promo',
     UserGetPromos = 'http://localhost:8000/api/get-user-promos',
     PromosGetAllData = 'http://localhost:8000/api/get-all-promos',
@@ -19,5 +19,15 @@ export enum ApiEndpoints {
     CreateFlight = 'http://localhost:8000/api/create-flight',
     FlightsPendingGetAllData = 'http://localhost:8000/api/get-all-pending-flights',
     FlightsPendingSearchFromLocation = 'http://localhost:8000/api/get-flights-from-location',
+    FlightGetDetails = 'http://localhost:8000/api/get-flight-details',
+    CityGetData = 'http://localhost:8000/api/get-city',
+    AirportGetData = 'http://localhost:8000/api/get-airport',
+    SeatGetDetail = 'http://localhost:8000/api/get-seat-details',
+    SeatGetAmount = 'http://localhost:8000/api/get-seat-amount',
+    FlightCompleteTransactionCreate = 'http://localhost:8000/api/create-complete-flight-transaction',
+    // UserTransactionCreate = 'http://localhost:8000/api/create-user-transaction',
+    // FlightTransactionCreate = 'http://localhost:8000/api/create-flight-transaction',
+    // TravelerCreate = 'http://localhost:8000/api/create-traveler',
+
 
 }

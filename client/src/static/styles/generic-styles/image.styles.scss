@@ -47,9 +47,9 @@
 }
 
 
-.invert{
-    filter: invert(1);
-}
+// .invert{
+//     filter: invert(1);
+// }
 .invert-soft{
     filter: invert(0.6);
 }
@@ -59,4 +59,10 @@
 .newdim{
     filter: brightness(40%) contrast(105%);
 }
-
+.newdim-soft{
+    transition: all 0.2s ease-in-out;
+    filter: brightness(60%);
+    &:hover {
+        filter: brightness(60%);
+    }
+}

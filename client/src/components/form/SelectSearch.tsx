@@ -25,7 +25,6 @@ const SelectSearch = ({ getSelected, selectedLocation, mainTheme=true }: SelectS
             <Label
                 onClick={() => setIsSearchVisible(true)}
                 fontSize={styles.f3xl}
-                fontWeight="700"
                 color={mainTheme ? styles.black: styles.white}
                 className="pointer"
             >

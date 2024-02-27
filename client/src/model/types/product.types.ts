@@ -7,3 +7,4 @@ type Promo = {
     code: string,
     isValid: boolean
 }
+

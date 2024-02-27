@@ -5,7 +5,7 @@ import { useState } from "react"
 
 const useLimiter = () =>{
     const [offset, setOffset] = useState(0)
-    const [limit, setLimit] = useState(10)
+    const [limit, setLimit] = useState(1)
 
     const updateOffset = ()=>{
         setOffset(prevOffset => prevOffset + limit)

@@ -36,7 +36,7 @@ const FloatingSearch = ({onSearchChange, children, handleClose}:floatingSearchPr
 					width="100%"
 					px="0px"
 					py="0px"
-					className="zbelownav space-between border-container"
+					className="zbelownav space-between border-container no-br"
                     onClick={(e:any) => e.stopPropagation()}
                     
 				>
@@ -56,7 +56,7 @@ const FloatingSearch = ({onSearchChange, children, handleClose}:floatingSearchPr
 						}}
 						onChange={handleInputChange}
 						placeholder="Search"
-						className="search-input"
+						className="search-input "
                         onClick={(e) => e.stopPropagation()}
 					/>
 				</Container>

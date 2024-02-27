@@ -70,7 +70,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
 						height="100%"
 					>
 						<Label
-                            color={mainTheme ? styles.secondaryBlack: styles.secondaryWhite}
+                            color={mainTheme ? styles.black: styles.secondaryWhite}
 						>
 							From
 						</Label>
@@ -83,7 +83,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
 						>
                             <SelectSearch mainTheme={mainTheme} getSelected={updateDeparture} selectedLocation={flight.departure}></SelectSearch>
 							{flight.departure && (
-								<Label className="no-wrap" color={mainTheme ? styles.black: styles.white}>
+								<Label className="no-wrap" color={mainTheme ? styles.secondaryWhite: styles.white}>
 									{flight.departure.code}, {flight.departure.city}, {flight.departure.country}
 								</Label>
 							)}
@@ -98,7 +98,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
 						height="100%"
 					>
 						<Label
-                            color={mainTheme ? styles.secondaryBlack: styles.secondaryWhite}
+                            color={mainTheme ? styles.black: styles.secondaryWhite}
 						>
 							To
 						</Label>
@@ -111,7 +111,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
 						>
                             <SelectSearch mainTheme={mainTheme}  getSelected={updateArrival} selectedLocation={flight.arrival}></SelectSearch>
 							{flight.arrival && (
-								<Label className="no-wrap" color={mainTheme ? styles.black: styles.white}>
+								<Label className="no-wrap" color={mainTheme ? styles.secondaryWhite: styles.white}>
 									{flight.arrival.code}, {flight.arrival.city}, {flight.arrival.country}
 								</Label>
 							)}
@@ -135,7 +135,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
 						height="100%"
 					>
 						<Label
-                            color={mainTheme ? styles.secondaryBlack: styles.secondaryWhite}
+                            color={mainTheme ? styles.black: styles.secondaryWhite}
 						>
 							Departure Date
 						</Label>
@@ -151,7 +151,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
 						width="50%"
 					>
 						<Label
-                            color={mainTheme ? styles.secondaryBlack: styles.secondaryWhite}
+                            color={mainTheme ? styles.black: styles.secondaryWhite}
 						>
 							Return Date
 						</Label>

@@ -5,6 +5,7 @@ const UpdatePromo = React.lazy(() => import('@comp/admin/UpdatePromo'));
 const ManageUser = React.lazy(() => import('@comp/admin/ManageUser'));
 const InsertFlight = React.lazy(() => import('@comp/admin/InsertFlight'));
 const ViewFlights = React.lazy(() => import('@comp/admin/ViewFlights'));
+const InsertHotel = React.lazy(() => import('@comp/admin/InsertHotel'));
 
 
 export const AdminSidebarRoutes = {
@@ -27,5 +28,9 @@ export const AdminSidebarRoutes = {
     ViewFlights:{
         name: "View Flights",
         element:<ViewFlights/>,
+    },
+    InsertHotel:{
+        name: "Insert Hotel",
+        element:<InsertHotel/>,
     },
 }

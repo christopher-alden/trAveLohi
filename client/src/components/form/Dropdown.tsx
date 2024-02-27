@@ -5,7 +5,7 @@ import Container from '@comp/container/Container';
 
 type DropdownProps = {
 	prompt?: string;
-	options: Array<string>,
+	options: Array<any>,
 	className?: string;
 	width?: string;
 	height?: string;

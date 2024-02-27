@@ -8,6 +8,10 @@ const OTP = React.lazy(() => import('@pages/OTP'));
 const GeoGuesser = React.lazy(() => import('@pages/GeoGuesser'));
 const Admin = React.lazy(() => import('@pages/Admin'));
 const Explore = React.lazy(() => import('@pages/Explore'));
+const Profile = React.lazy(() => import('@pages/Profile'));
+const FlightDetails = React.lazy(() => import('@pages/FlightDetails'));
+const FlightReservation = React.lazy(() => import('@pages/FlightReservation'));
+const MyReservations = React.lazy(() => import('@pages/MyReservations'));
 
 export const MappedRoutes = [
     {
@@ -41,5 +45,21 @@ export const MappedRoutes = [
     {
         element: <Explore/>,
         path:'/explore',
+    },
+    {
+        element: <Profile/>,
+        path:'/profile',
+    },
+    {
+        element: <FlightDetails/>,
+        path:'/explore/flight-details',
+    },
+    {
+        element: <FlightReservation/>,
+        path:'/explore/flight-details/flight-reservation',
+    },
+    {
+        element: <MyReservations/>,
+        path:'/my-reservations',
     },
 ]

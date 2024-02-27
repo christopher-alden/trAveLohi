@@ -68,7 +68,7 @@ const DatePicker = ({
 				name={name}
 				id={name}
 				type="date"
-				className={`basic-date-input darkmode ${className || ''}`}
+				className={`${className || ''}`}
 				{...register(name, rules)}
 				style={{
 					width: '100%',

@@ -15,7 +15,7 @@ type TextFieldProps = {
 	color?: string;
 	register: any;
 	rules: any;
-	name: string;
+	name?: string;
 	error: any;
 	defaultValue?: any;
 };
@@ -46,7 +46,7 @@ const TextField = ({
 	};
 	return (
 		<div
-			className={'label-form'}
+			className='label-form'
 			style={divStyle}
 		>
 			{prompt && (

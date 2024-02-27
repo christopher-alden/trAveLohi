@@ -9,7 +9,7 @@ export const NavbarRoutes = [
     },
     {
         name: "My Reservations",
-        path:'/reservations',
+        path:'/my-reservations',
     },
     {
         name: "Geo Guesser",

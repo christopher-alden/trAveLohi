@@ -42,9 +42,14 @@ func Migrate() {
 
 		db.AutoMigrate(&models.Airline{})
 		db.AutoMigrate(&models.Traveler{})
+		//HOTEL
+		db.AutoMigrate(&models.Hotel{})
+		db.AutoMigrate(&models.Facility{})
 
 		db.AutoMigrate(&models.FlightRoute{})
 		db.AutoMigrate(&models.Airplane{})
+		//HOTEL
+		db.AutoMigrate(&models.HotelDetail{})
 		
 		db.AutoMigrate(&models.SeatDetail{})
 		db.AutoMigrate(&models.Flight{})
@@ -56,6 +61,7 @@ func Migrate() {
 
 		db.AutoMigrate(&models.UserTransaction{})
 		db.AutoMigrate(&models.FlightTransaction{})
+		db.AutoMigrate(&models.HotelTransaction{})
 		migrateSchema()
 	}
 }
@@ -114,22 +120,6 @@ func migrateSchema() {
         FOR EACH ROW
         WHEN (OLD.status IS DISTINCT FROM NEW.status AND NEW.status = 'cancel')
         EXECUTE FUNCTION trg_flight_cancel();`,
-
-
-		`CREATE OR REPLACE FUNCTION trg_flight_transaction_refund()
-        RETURNS TRIGGER AS $$
-        BEGIN
-            UPDATE seat_details
-            SET is_available = TRUE
-            WHERE id = OLD.seat_id;
-            RETURN OLD;
-        END;
-        $$ LANGUAGE plpgsql;`,
-		`CREATE TRIGGER trg_after_flight_transaction_refund
-        AFTER UPDATE ON flight_transactions
-        FOR EACH ROW
-        WHEN (OLD.status IS DISTINCT FROM NEW.status AND NEW.status = 'refunded')
-        EXECUTE FUNCTION trg_flight_transaction_refund();`,
 
 
 		`CREATE OR REPLACE FUNCTION calculate_arrival_time()

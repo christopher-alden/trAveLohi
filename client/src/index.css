@@ -1,0 +1,118 @@
+@import url("./static/styles/typography.css");
+/* STYLING */
+* {
+  margin: 0px;
+  padding: 0px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+       user-select: none;
+  letter-spacing: -0.01rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+input {
+  padding-block: 8px;
+  padding-inline: 12px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  font-size: 1rem;
+  font-family: suisse;
+  box-sizing: border-box;
+  border: none;
+  outline: 1px solid #1a1a1a;
+  background-color: #fafafa;
+}
+
+textarea {
+  padding-block: 8px;
+  padding-inline: 12px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  font-size: 1rem;
+  font-family: suisse;
+  box-sizing: border-box;
+  border: none;
+  outline: 1px solid #1a1a1a;
+  background-color: #fafafa;
+}
+
+select {
+  padding-block: 8px;
+  padding-inline: 12px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  font-family: suisse;
+  font-size: 1rem;
+  border: none;
+  outline: 1px solid black;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  background-color: #fafafa;
+}
+
+select.paddingOffset {
+  padding-left: 2.5px;
+}
+
+input.paddingOffset {
+  padding-left: 5px;
+}
+
+form {
+  all: unset;
+}
+
+:root {
+  font-family: suisse;
+  line-height: 1.5;
+  font-weight: 400;
+  /* color-scheme: light dark; */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100dvw;
+  height: 100dvh;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8d9596;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+button:disabled,
+button[disabled],
+button[disabled]:hover {
+  background-color: #cccccc;
+  color: #666666;
+}
+
+/* @media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} *//*# sourceMappingURL=index.css.map */

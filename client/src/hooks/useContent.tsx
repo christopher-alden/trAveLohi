@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AdminSidebarRoutes } from "@myLayout/adminSidebar.layout";
+import { UserSidebarLayout } from "@myLayout/userSidebar.layout";
 import { UserRole } from "@myTypes/user.types";
 type ContentItem = {
     name: string;
@@ -26,7 +27,17 @@ const useContent = (userRole: UserRole | undefined) => {
             }));
             
             setContents(accessibleContent );
-        } else {
+        }
+        else if(userRole === UserRole.user){
+            const accessibleContent = Object.entries(UserSidebarLayout).map(([key, {name, element}]) => ({
+                name: name,
+                element: element,
+                key: key,
+            }));
+            
+            setContents(accessibleContent );
+        }
+        else {
             setContents([]);
         }
     }, [userRole]);

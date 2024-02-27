@@ -89,9 +89,10 @@ const Login = () => {
 							<TextField name='email' register={register} rules={AttributeRules.email} error={errors.email} width='100%' color={styles.black} prompt='Email' outlineColor='black'/>
 							<TextField name='password' register={register} rules={AttributeRules.password} error={errors.password} width='100%' color={styles.black} prompt='Password' outlineColor='black'/>
 							<Link className='link' to={'/forgot-password'}><Label fontSize={styles.fsm} color={styles.blue}>Forgot Password?</Label></Link>
+							
+							<hr/>
 							<Container width='100%' direction='column' px='0px' py={styles.g4} gap={styles.g4}>
 								<Button submit={true} className='primary-btn'>Login</Button>
-								<hr></hr>
 								<Button onClick={()=>{onOTP()}} className='outline-btn'>Login with OTP</Button>
 							</Container>
 						</Container>

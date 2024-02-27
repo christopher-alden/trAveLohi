@@ -8,8 +8,10 @@ import (
 	"github.com/christopher-alden/trAveLohi/database"
 	"github.com/christopher-alden/trAveLohi/models"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
+// ADMIN
 func CreateFlight(c *fiber.Ctx) error {
 	var request struct {
 		AirlplaneID uint   `json:"airplaneId"`
@@ -39,7 +41,6 @@ func CreateFlight(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(request.Flight.FlightDate.DepartureTime)
 	departureTime, err := time.Parse("2006-01-02T15:04:05.000Z", request.Flight.FlightDate.DepartureTime)
 	if err != nil {
 		fmt.Println("error in departure time parsing", err)
@@ -212,6 +213,27 @@ func GetFlightRoutes(c *fiber.Ctx) error {
 	return c.JSON(flightRoutes)
 }
 
+// USERS * ADMIN
+func flightDetailQuery(offset int, limit int) *gorm.DB {
+
+	db := database.GetDB()
+
+	query := db.Table("flights AS f").Offset(offset).Limit(limit).
+		Joins("join flight_routes AS fr on f.flight_route_id = fr.id").
+		Preload("Airplane").
+		Preload("Airplane.Airline").
+		Preload("FlightRoute").
+		Preload("FlightRoute.ArrivalAirport").
+		Preload("FlightRoute.ArrivalAirport.City").
+		Preload("FlightRoute.ArrivalAirport.City.Country").
+		Preload("FlightRoute.DepartureAirport").
+		Preload("FlightRoute.DepartureAirport.City").
+		Preload("FlightRoute.DepartureAirport.City.Country").
+		Preload("Airline")
+
+	return query
+}
+
 func GetAllPendingFlights(c *fiber.Ctx) error {
 	limitQuery := c.Query("limit", "10")
 	offsetQuery := c.Query("offset", "0")
@@ -240,18 +262,9 @@ func GetAllPendingFlights(c *fiber.Ctx) error {
 
 	var flights []models.Flight
 
-	if err := db.Offset(offset).Limit(limit).
-		Preload("Airplane").
-		Preload("Airplane.Airline").
-		Preload("FlightRoute").
-		Preload("FlightRoute.ArrivalAirport").
-		Preload("FlightRoute.ArrivalAirport.City").
-		Preload("FlightRoute.ArrivalAirport.City.Country").
-		Preload("FlightRoute.DepartureAirport").
-		Preload("FlightRoute.DepartureAirport.City").
-		Preload("FlightRoute.DepartureAirport.City.Country").
-		Preload("Airline").
-		Where("status ILIKE ?", "pending").
+	query := flightDetailQuery(offset, limit)
+
+	if err := query.Where("status ILIKE ?", "pending").
 		Find(&flights).Error; err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{"message": "Failed to retrieve flights"})
@@ -260,14 +273,14 @@ func GetAllPendingFlights(c *fiber.Ctx) error {
 	return c.JSON(flights)
 }
 
-
-func GetFlightFromLocation(c *fiber.Ctx) error{
-    arrival := c.Query("arrivalId")
+func GetFlightFromLocation(c *fiber.Ctx) error {
+	arrival := c.Query("arrivalId")
 	departure := c.Query("departureId")
-    limitQuery := c.Query("limit", "10")
+	limitQuery := c.Query("limit", "10")
 	offsetQuery := c.Query("offset", "0")
+	typeQuery := c.Query("searchType")
 
-    var arrivalId, departureId int
+	var arrivalId, departureId int
 	var err error
 
 	limit, err := strconv.Atoi(limitQuery)
@@ -296,30 +309,31 @@ func GetFlightFromLocation(c *fiber.Ctx) error{
 		}
 	}
 
-    var flights []models.Flight
+	var flights []models.Flight
 	db := database.GetDB()
 
-	query := db.Table("flights AS f").Offset(offset).Limit(limit).
-        Joins("join flight_routes AS fr on f.flight_route_id = fr.id").
-		Preload("Airplane").
-		Preload("Airplane.Airline").
-		Preload("FlightRoute").
-		Preload("FlightRoute.ArrivalAirport").
-		Preload("FlightRoute.ArrivalAirport.City").
-		Preload("FlightRoute.ArrivalAirport.City.Country").
-		Preload("FlightRoute.DepartureAirport").
-		Preload("FlightRoute.DepartureAirport.City").
-		Preload("FlightRoute.DepartureAirport.City.Country").
-		Preload("Airline")
-	
+	var totalCount int64
+	db.Model(&models.Flight{}).Count(&totalCount)
 
-	if arrival != "" {
-		query = query.Where("fr.arrival_id = ?", arrivalId)
+	if int64(offset) >= totalCount {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Exceed number of records"})
 	}
-	if departure != "" {
-		query = query.Where("fr.departure_id = ?", departureId)
+
+	query := flightDetailQuery(offset, limit)
+
+	if typeQuery == "" {
+		if arrival != "" {
+			query = query.Where("fr.arrival_id = ?", arrivalId)
+		}
+		if departure != "" {
+			query = query.Where("fr.departure_id = ?", departureId)
+		}
+	} else if typeQuery == "location" {
+		query = query.Where("fr.arrival_id = ? OR fr.departure_id = ?", arrivalId, departureId)
 	}
-    query = query.Where("f.status ILIKE ?", "pending")
+
+	query = query.Where("f.status ILIKE ?", "pending")
 
 	queryErr := query.Find(&flights).Error
 
@@ -328,6 +342,233 @@ func GetFlightFromLocation(c *fiber.Ctx) error{
 		return c.JSON(fiber.Map{"message": "Failed to fetch airline"})
 	}
 
-
 	return c.JSON(flights)
+}
+
+func GetFlightDetails(c *fiber.Ctx) error {
+	flightQuery := c.Query("flightId")
+
+	flightId, err := strconv.Atoi(flightQuery)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid limit value"})
+	}
+
+	var flight models.Flight
+
+	query := flightDetailQuery(0, 1)
+
+	query = query.Where("f.id = ? ", flightId)
+	query = query.Where("f.status ILIKE  ?", "pending")
+
+	queryErr := query.Find(&flight).Error
+
+	if queryErr != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Failed to fetch flight",
+		})
+	}
+
+	return c.JSON(flight)
+}
+
+func GetSeatAmountFromFlight(c *fiber.Ctx) error {
+	flightQuery := c.Query("flightId")
+	flightId, err := strconv.Atoi(flightQuery)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid flight ID value"})
+	}
+
+	db := database.GetDB()
+
+	var totalCount int64
+
+	queryErr := db.Table("flights AS f").
+		Joins("JOIN airplanes ON airplanes.id = f.airplane_id").
+		Joins("JOIN seat_details AS seat ON airplanes.id = seat.airplane_id AND seat.is_available = ?", true).
+		Where("f.id = ?", flightId).
+		Count(&totalCount).Error
+
+	if queryErr != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Failed to fetch seat details",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"seatAmount": totalCount,
+	})
+}
+
+func GetSeatDetailsFromFlight(c *fiber.Ctx) error {
+	flightQuery := c.Query("flightId")
+	flightId, err := strconv.Atoi(flightQuery)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid flight ID value"})
+	}
+
+	var seatDetails []models.SeatDetail
+
+	db := database.GetDB()
+
+	query := db.Table("flights AS f").
+		Select(`seat.id AS "ID", airplanes.id AS "airplaneId", seat.code, seat.class, seat.is_available`).
+		Joins("JOIN airplanes ON airplanes.id = f.airplane_id").
+		Joins("JOIN seat_details AS seat ON airplanes.id = seat.airplane_id").
+		Where("f.id = ?", flightId).
+		Order("seat.id ASC")
+
+	queryErr := query.Find(&seatDetails).Error
+
+	if queryErr != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Failed to fetch seat details",
+		})
+	}
+
+	return c.JSON(seatDetails)
+}
+
+// func CreateFlightTransaction(c *fiber.Ctx) error {
+// 	var request struct {
+// 		TicketCode        string `json:"ticketCode"`
+// 		UserTransactionID uint   `json:"userTransactionId"`
+// 		FlightID          uint   `json:"flightId"`
+// 		TravelerID        uint   `json:"travelerId"`
+// 		SeatID            uint   `json:"seatId"`
+// 		IsRoundTrip       bool   `json:"isRoundTrip"`
+// 		Baggage           uint   `json:"baggage"`
+// 	}
+
+// 	if err := c.BodyParser(&request); err != nil {
+// 		c.Status(fiber.StatusBadRequest)
+// 		return c.JSON(fiber.Map{"message": "Failed request"})
+// 	}
+
+// 	db := database.GetDB()
+
+// 	flightTransaction := models.FlightTransaction{
+// 		TicketCode:        request.TicketCode,
+// 		UserTransactionID: request.UserTransactionID,
+// 		FlightID:          request.FlightID,
+// 		TravelerID:        request.TravelerID,
+// 		SeatID:            request.SeatID,
+// 		IsRoundTrip:       request.IsRoundTrip,
+// 		Baggage:           request.Baggage,
+// 	}
+
+// 	result := db.Create(&flightTransaction)
+
+// 	if result.Error != nil {
+// 		c.Status(fiber.StatusInternalServerError)
+// 		return c.JSON(fiber.Map{"message": "Failed to create flight transaction", "error": result.Error.Error()})
+// 	}
+
+// 	return c.JSON(fiber.Map{
+// 		"message":"Success",
+// 		"flightTransaction":flightTransaction,
+// 	})
+
+// }
+
+func CreateCompleteFlightTransaction(c *fiber.Ctx) error {
+	type TravelerRequest struct {
+		FirstName      string `json:"firstName"`
+		LastName       string `json:"lastName"`
+		PassportNumber string `json:"passportNumber"`
+		DateOfBirth    string `json:"dateOfBirth"`
+	}
+
+	type FlightTransactionRequest struct {
+		TicketCode  string `json:"ticketCode"`
+		FlightID    uint   `json:"flightId"`
+		SeatID      uint   `json:"seatId"`
+		IsRoundTrip bool   `json:"isRoundTrip"`
+		Baggage     uint   `json:"baggage"`
+	}
+
+	var request struct {
+		UserID             uint                       `json:"userId"`
+		Price              uint                       `json:"price"`
+		TransactionDate    string                     `json:"transactionDate"`
+		Status             string                     `json:"status"`
+		Travelers          []TravelerRequest          `json:"travelers"`
+		FlightTransactions []FlightTransactionRequest `json:"flightTransactions"`
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Request parsing failed"})
+	}
+
+	db := database.GetDB()
+	tx := db.Begin()
+
+	transactionDate, err := time.Parse("2006-01-02T15:04:05.000Z", request.TransactionDate)
+	if err != nil {
+		tx.Rollback()
+		return c.JSON(fiber.Map{"message": "Invalid transaction date"})
+	}
+
+	userTransaction := models.UserTransaction{
+		UserID:          request.UserID,
+		Price:           request.Price,
+		TransactionDate: transactionDate,
+		Status:          request.Status,
+	}
+
+	if err := tx.Create(&userTransaction).Error; err != nil {
+		tx.Rollback()
+		return c.JSON(fiber.Map{"message": "Failed to create user transaction", "error": err.Error()})
+	}
+
+	for i, travelerReq := range request.Travelers {
+		dob, _ := time.Parse("2006-01-02", travelerReq.DateOfBirth)
+		traveler := models.Traveler{
+			FirstName:      travelerReq.FirstName,
+			LastName:       travelerReq.LastName,
+			PassportNumber: travelerReq.PassportNumber,
+			DateOfBirth:    dob,
+		}
+
+		if err := tx.Where(models.Traveler{PassportNumber: traveler.PassportNumber}).FirstOrCreate(&traveler).Error; err != nil {
+			tx.Rollback()
+			return c.JSON(fiber.Map{"message": "Failed to create or find traveler", "error": err.Error()})
+		}
+
+		var seat models.SeatDetail
+		if err := tx.Where("id = ?", request.FlightTransactions[i].SeatID).First(&seat).Error; err != nil {
+			tx.Rollback()
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to find seat", "error": err.Error()})
+		}
+
+		if !seat.IsAvailable{
+			tx.Rollback()
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Seat is not available"})
+		}
+
+		flightTransactionReq := request.FlightTransactions[i]
+		flightTransaction := models.FlightTransaction{
+			TicketCode:        flightTransactionReq.TicketCode,
+			UserTransactionID: userTransaction.ID,
+			FlightID:          flightTransactionReq.FlightID,
+			TravelerID:        traveler.ID,
+			SeatID:            flightTransactionReq.SeatID,
+			IsRoundTrip:       flightTransactionReq.IsRoundTrip,
+			Baggage:           flightTransactionReq.Baggage,
+		}
+
+		if err := tx.Create(&flightTransaction).Error; err != nil {
+			tx.Rollback()
+			return c.JSON(fiber.Map{"message": "Failed to create flight transaction", "error": err.Error()})
+		}
+	}
+
+	tx.Commit()
+	return c.JSON(fiber.Map{"message": "Complete transaction created successfully"})
 }

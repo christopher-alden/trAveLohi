@@ -54,5 +54,8 @@ export const AttributeRules ={
         required:"*Required",
         maxLength:100,
         minLength:3,
+    },
+    addOnBaggage:{
+        required:"*Required",
     }
 }

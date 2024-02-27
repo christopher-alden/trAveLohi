@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/christopher-alden/trAveLohi/database"
 	"github.com/christopher-alden/trAveLohi/models"
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetAirports(c *fiber.Ctx) error {
+func SearchAirports(c *fiber.Ctx) error {
 	queryTerm := c.Query("term")
 	queryTerm = "%" + queryTerm + "%"
 
@@ -45,4 +46,57 @@ func GetAirports(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(airports)
+}
+
+func GetAirport(c *fiber.Ctx) error{
+	queryId := c.Query("id")
+	var airport models.Airport
+	db := database.GetDB()
+
+	id, err := strconv.Atoi(queryId)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid value"})
+	}
+
+	resultErr := db.Table("airports").
+		Preload("City").
+		Preload("City.Country").
+		Where("airports.id = ?", id).Find(&airport).Error
+
+	if resultErr != nil {
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{
+			"message":"Failed to fetch city",
+		})
+	}
+
+	return c.JSON(airport)
+}
+
+func GetCity(c *fiber.Ctx) error{
+	queryCityId := c.Query("cityId")
+
+	var city models.City
+	db := database.GetDB()
+
+	cityId, err := strconv.Atoi(queryCityId)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{"message": "Invalid value"})
+	}
+
+	fmt.Print(cityId)
+	resultErr := db.Table("cities").
+		Preload("Country").
+		Where("cities.id = ?", cityId).Find(&city).Error
+
+	if resultErr != nil {
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{
+			"message":"Failed to fetch city",
+		})
+	}
+
+	return c.JSON(city)
 }

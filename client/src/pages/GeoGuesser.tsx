@@ -5,6 +5,7 @@ import ProtectedRoute from 'src/middleware/ProtectedRoute';
 import Navbar from '@comp/navigation/Navbar';
 import '@styles/generic-styles/container.styles.scss'
 import useBase64 from 'src/hooks/useBase64';
+import Footer from '@comp/navigation/Footer';
 
 const GeoGuesser = () => {
     const { base64Sep, error, processImageToBase64 } = useBase64();
@@ -53,20 +54,20 @@ const GeoGuesser = () => {
 
     return (
         <ProtectedRoute>
-            <>
-
-            <Navbar/>
-            <Container px='0px' py='0px' className='push-navbar'>
-                <Container>
-                    <form onSubmit={onSubmit}>
-                        <input name="image" type="file" accept="image/*" />
-                        <button type="submit">Upload Image</button>
-                        {image && <button type="button" onClick={processImage}>Process Image</button>}
-                    </form>
-                    {location && <p>Predicted Location: {location}</p>}
+            <Container px='0px' py='0px' direction='column' width='100%' className="bg-notthatwhite min-h-full">
+                <Navbar/>
+                <Container px='0px' py='0px' className='push-navbar '>
+                    <Container>
+                        <form onSubmit={onSubmit}>
+                            <input name="image" type="file" accept="image/*" />
+                            <button type="submit">Upload Image</button>
+                            {image && <button type="button" onClick={processImage}>Process Image</button>}
+                        </form>
+                        {location && <p>Predicted Location: {location}</p>}
+                    </Container>
                 </Container>
             </Container>
-            </>
+            <Footer/>
         </ProtectedRoute>
     );
 };

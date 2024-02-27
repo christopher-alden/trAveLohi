@@ -8,22 +8,23 @@ import UserPromoWidget from '@comp/product/UserPromoWidget';
 import FlightSearchWidget from '@comp/product/FlightSearchWidget';
 import FormlessDropdown from '@comp/form/FormlessDropdown';
 import { useState } from 'react';
-import { Flight, classList, tripRouteList } from '@myTypes/flight.types';
+import { Flight, TripRouteList, SeatClass } from '@myTypes/flight.types';
 import Footer from '@comp/navigation/Footer';
 import leftArrow from '@icons/arrow-icon.png'
 import Picture from '@comp/container/Picture';
 import Button from '@comp/form/Button';
-import { useNavigate } from 'react-router-dom';
+import { useSearch } from 'src/context/searchContext';
 
 
 
 
 const Home = () => {
+	const {execSearch} = useSearch()
 	const [chosenFlight, setChosenFlight] = useState<Flight>({arrival:null, departure:null, flightTime:null})
-	const navigate = useNavigate()
 
-	const handleSearch = () =>{
 
+	const searchBuilder = () =>{
+		
 		let searchQuery = `/explore?searchMode=${encodeURIComponent('flights')}`
 
 		//TODO: ini case kalo flight doang
@@ -36,10 +37,11 @@ const Home = () => {
 			}
 		}
 
-		navigate(searchQuery)
+		execSearch(searchQuery)
 	}
 
 
+	console.log('run')
 	return (
 		// <ProtectedRoute>
 			<Container px='0px' py='0px' direction='column' width='100vw'>
@@ -47,9 +49,9 @@ const Home = () => {
 				<Container  px='0px' py='0px' width='100vw' height='80vh'>
 					<Slideshow content={locationInformation}/>
 				</Container>
-				<Container direction='column' px='0px' py='0px' width='100vw' height='fit-content' className='bg-white z-1000 no-br'>
-					<Container  width='100vw' height='325px' className='floating-island-ctr' >
-						<Container px={styles.g16} py={styles.g10} direction='column' width='100%' height='100%' className='bg-white shadow floating-island relative ' gap={styles.g4}>
+				<Container direction='column' px='0px' py='0px' width='100vw' height='fit-content' className='bg-notthatwhite z-1000 no-br'>
+					<Container  width='100vw' height='325px' className='floating-island-ctr no-br' >
+						<Container px={styles.g16} py={styles.g10} direction='column' width='100%' height='100%' className='bg-notthatwhite no-br shadow floating-island relative ' gap={styles.g4}>
 							<Container
 								direction="row"
 								px="0px"
@@ -58,18 +60,21 @@ const Home = () => {
 								className='z2'
 							>
 								<FormlessDropdown
+									onChange={()=>{}}
 									name="trip"
-									className="no-outline no-padding-l"
-									options={tripRouteList}
+									className="no-outline no-padding-l bg-notthatwhite"
+									options={TripRouteList}
 								/>
 								<FormlessDropdown
+									onChange={()=>{}}
+
 									name="class"
-									className="no-outline no-padding-l"
-									options={classList}
+									className="no-outline no-padding-l bg-notthatwhite"
+									options={Object.values(SeatClass)}
 								/>
 							</Container>
 							<FlightSearchWidget flight={chosenFlight} setFlight={setChosenFlight} />
-							<Button onClick={()=>{handleSearch()}} victor={chosenFlight.departure==null && chosenFlight.arrival==null} className='primary-btn floating-btn flex-align space-between'>
+							<Button onClick={()=>{searchBuilder()}} victor={chosenFlight.departure==null && chosenFlight.arrival==null} className='primary-btn  floating-btn flex-align space-between'>
 								Search
 								<Picture width='25px' height='25px' className='rotate' src={leftArrow}/>
 							</Button>
@@ -78,8 +83,8 @@ const Home = () => {
 					
 					</Container>
 					{/* PEMBAGI AJA */}
-					<Container height='20vh' width='100vw' className=''></Container>
-					<Container direction='column' width='100vw' height='100vh' gap={styles.g4}>
+					<Container height='20vh' width='100vw' className='bg-notthatwhite'></Container>
+					<Container className='bg-notthatwhite' direction='column' width='100vw' height='100vh' gap={styles.g4}>
 						<UserPromoWidget/>
 					</Container>
 				</Container>

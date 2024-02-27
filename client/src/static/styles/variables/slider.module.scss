@@ -16,22 +16,22 @@
 .sliderCard{
     position: relative;
     flex-shrink: 0;
-    .sliderInfo{
-        position: absolute;
-        .sliderValid{
-            justify-content: end;
-            align-items: end;
-            .sliderValidText{
-                @include br($br-xs);
-            }
-        }
-        .sliderDetails{
-            justify-content: end;   
-            .sliderDesc{
-                max-width: 70%;
-                flex-wrap: wrap;
-                word-wrap: break-word;
-            }
+    
+    .sliderPictureCtr{
+        position: relative;
+        
+        .sliderTitle{
+            position: absolute;
+            bottom: $g-8;
+            left: $g-8;
+            z-index: 1;
         }
     }
+    
+    .sliderDesc{
+        max-width: 100%;
+        flex-wrap: wrap;
+        word-wrap: break-word;
+    }
+    
 }

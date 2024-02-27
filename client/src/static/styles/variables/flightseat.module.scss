@@ -1,0 +1,36 @@
+@import './variables.styles.scss';
+
+.seatGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax($g-16, 1fr));
+    gap: $g-4;
+}
+
+.seatButton {
+    width: $g-16; 
+    height: $g-16; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $notthatwhite;
+    cursor: pointer;
+    box-sizing: border-box; 
+
+    &.available {
+        background-color: $secondary-white;
+    }
+
+    &.unavailable {
+        background-color: $notthatwhite;
+        color: $secondary-white;
+    }
+    &.picked{
+        background-color: $blue;
+        color: $white;
+        filter: brightness(0.8);
+    }
+    &.currentPicked{
+        background-color: $blue;
+        color: $white
+    }
+}

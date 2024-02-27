@@ -3,6 +3,7 @@ import { Airport } from '@myTypes/location.types';
 import {ApiEndpoints} from '@util/api.utils';
 import debounce from 'lodash.debounce'
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 // This context is the main controller for all searching
 // Its called in different search controllers
 // searchTerm should be inputted in FloatingSearch
@@ -16,7 +17,8 @@ interface SearchContextType {
 	searchMode: 'hotels' | 'flights';
 	setSearchMode: (mode: 'hotels' | 'flights') => void;
 	performSearch: () => Promise<void>;
-	handleSearch: (term:string) => void
+	handleSearch: (term:string) => void;
+	execSearch: (url:string) => void
 	isLoading: boolean
 }
 
@@ -27,6 +29,7 @@ const SearchContextDefaultValues: SearchContextType = {
 	searchMode: 'flights',
 	setSearchMode: () => {},
 	performSearch: async () => {},
+	execSearch: ()=>{},
 	handleSearch: () => {},
 	isLoading: false,
 };
@@ -41,8 +44,10 @@ export const SearchProvider: React.FC<{children: React.ReactNode}> = ({children}
 	const [searchResults, setSearchResults] = useState<Airport[]>([]);
 	const [searchMode, setSearchMode] = useState<'hotels' | 'flights'>('flights');
 
+	const navigate = useNavigate()
 
 	// use this to modify the search term, this debounces the search to avoid multiple API calls
+	// search onChange
 	const handleSearch = debounce((term:string)=>{
 		setSearchTerm(term)
 	},700)
@@ -68,11 +73,18 @@ export const SearchProvider: React.FC<{children: React.ReactNode}> = ({children}
 		}
 	};
 
+	// !! CALL THIS TO RUN SEARCH
+	const execSearch = (searchQuery:string) =>{
+		navigate(searchQuery)
+        // window.location.reload();
+	}
+
 	// this will handle all the async state management
 	// will be modified to handle different modes
 	// main error and loading state will come from here
 	const { error, isLoading } = useQuery(['performSearch', searchTerm, searchMode], performSearch,{
 		retry:false,
+		enabled: !!searchTerm,
 		staleTime: 1 * 5 * 1000,
 		cacheTime: 15 * 60 * 1000,
 		onSuccess: (data) =>{
@@ -94,7 +106,7 @@ export const SearchProvider: React.FC<{children: React.ReactNode}> = ({children}
 
 	return (
 		<SearchContext.Provider
-			value={{searchTerm, handleSearch, searchResults, setSearchResults, searchMode, setSearchMode, performSearch, isLoading}}
+			value={{searchTerm, handleSearch, searchResults, setSearchResults, searchMode, setSearchMode, performSearch, execSearch, isLoading}}
 		>
 			{children}
 		</SearchContext.Provider>

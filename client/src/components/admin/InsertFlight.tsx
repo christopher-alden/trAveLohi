@@ -11,9 +11,6 @@ import { ApiEndpoints } from '@util/api.utils';
 import { useQuery } from 'react-query';
 import chevronIcon from "@icons/down-icon.png"
 
-
-
-
 const InsertFlight = () => {
     const [chosenFlight, setChosenFlight] = useState<Flight>({arrival:null, departure:null, flightTime:null})
     // TODO: JADI FLIGHT AJA?
@@ -87,6 +84,7 @@ const InsertFlight = () => {
     const onAirlineChange = () =>{
         setChosenAirplane(null)
     }
+
     const {error:airlineError, isLoading:arilineIsLoading} = useQuery([`fetchAirlineFromRoutes`,chosenFlight], fetchAirlineFromRoutes,{
         retry:false,
         onSuccess: (data)=>{

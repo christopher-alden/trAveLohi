@@ -26,3 +26,5 @@ type Promo struct {
 	IsValid     bool        `gorm:"default:true"`
 	UserPromos  []UserPromo `gorm:"foreignKey:PromoID"`
 }
+
+

@@ -18,7 +18,7 @@ button{
 }
 input{
   @include padding(12px,8px);
-  @include br($br-xs);
+  // @include br($br-xs);
   font-size: $f-base;
   font-family: suisse;
   box-sizing: border-box;
@@ -27,10 +27,20 @@ input{
   background-color: $white;
 }
 
+textarea{
+  @include padding(12px,8px);
+  // @include br($br-xs);
+  font-size: $f-base;
+  font-family: suisse;
+  box-sizing: border-box;
+  border: none;
+  outline: 1px solid $black;
+  background-color: $white;
+}
 select
 {
 	@include padding(12px,8px);
-  @include br($br-xs);
+  // @include br($br-xs);
   font-family: suisse;
   font-size: $f-base;
   border: none;
@@ -105,3 +115,8 @@ button[disabled]:hover{
     background-color: #f9f9f9;
   }
 } */
+
+
+hr{
+  border: solid 1px rgb(201, 201, 201);
+}

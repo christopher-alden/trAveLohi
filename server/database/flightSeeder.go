@@ -218,11 +218,11 @@ func seedFlights() {
 		TotalSeats int
 		SeatLayout map[string]int
 	}{
-		{"Airbus A320", 180, map[string]int{"Economy": 168, "Business": 12}},
-		{"Boeing 737-800", 160, map[string]int{"Economy": 144, "Business": 16}},
-		{"Airbus A330-300", 277, map[string]int{"Economy": 247, "Business": 30}},
-		{"Boeing 777-300ER", 396, map[string]int{"Economy": 306, "Business": 58, "First Class": 32}},
-		{"Boeing 787-9", 236, map[string]int{"Economy": 198, "Business": 28, "Premium Economy": 10}},
+		{"Airbus A320", 180, map[string]int{"Economy": 168, "Business Class": 12}},
+		{"Boeing 737-800", 160, map[string]int{"Economy": 144, "Business Class": 16}},
+		{"Airbus A330-300", 277, map[string]int{"Economy": 247, "Business Class": 30}},
+		{"Boeing 777-300ER", 396, map[string]int{"Economy": 306, "Business Class": 58, "First Class": 32}},
+		{"Boeing 787-9", 236, map[string]int{"Economy": 198, "Business Class": 28, "First-Class": 10}},
 	}
 
 	airlineKey := []uint{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}

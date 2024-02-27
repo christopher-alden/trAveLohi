@@ -35,6 +35,7 @@ const ViewFlights = () =>{
         cacheTime: 10 * 60 * 1000, 
         onSuccess: (data) =>{
             const transformedData:FlightDetail[] = data.map((entry:any) => ({
+                ID:entry.ID,
                 flightRoute:{
                     ID:entry.flightRoute.ID,
                     departure: entry.flightRoute.departureAirport,
@@ -64,15 +65,14 @@ const ViewFlights = () =>{
 
     })
     
-    console.log(isIntersecting)
     useEffect(() => {
         if (isIntersecting && !flightsLoading && !error) {
             console.log("Intersection observed, enabling fetch.");
             setEnableFetch(true);
         }
-    }, [isIntersecting,offset,flightsLoading]);;
+    }, [isIntersecting, offset, flightsLoading]);;
 
-    if (flightsLoading) return <></>;
+    // if (flightsLoading) retur/n <></>;
     return(
         <Container direction="row" width="100%" height="100%"  className="no-br c-white no-padding ">
             <Bento width="50%" height="100%">
@@ -87,10 +87,10 @@ const ViewFlights = () =>{
                         ):
                         (
                             <>
-                            {flightDetails.map((flightDetail, index)=>{
+                            {flightDetails.map((flightDetail)=>{
                                 return(
-                                    <Button onClick={()=>{}} key={index} className="bento-btn">
-                                        <Label color={`${index == index ? styles.white :styles.secondaryWhite}`} >
+                                    <Button onClick={()=>{}} key={flightDetail.ID} className="bento-btn">
+                                        <Label color={`${flightDetail.ID == flightDetail.ID ? styles.white :styles.secondaryWhite}`} >
                                             [{flightDetail.airline?.name}] {flightDetail.flightRoute?.departure.code} - {flightDetail.flightRoute?.arrival.code} , {flightDetail.airplane?.code}
                                         </Label>
                                         {/* <Picture  width="25px" height="25px" className="bento-icon icon-right" src={chevronIcon}/> */}
@@ -101,7 +101,7 @@ const ViewFlights = () =>{
                             </>
                         )
                     }
-                    <div ref={scrollEndRef}>{flightsLoading && <>loading</>}</div>
+                    <div ref={scrollEndRef}></div>
                 </Container>
             </Bento>
         </Container>

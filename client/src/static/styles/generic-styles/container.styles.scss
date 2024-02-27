@@ -25,7 +25,7 @@
     display: flex;
     @include br($br-s);
     box-sizing: border-box;
-    border: solid 1px $white;
+    border: solid 1px $secondary-white;
 }
 
 .softblur{
@@ -40,7 +40,7 @@
     height: 100%;
 
     .search-container{
-        @include br($br-m);
+        // @include br($br-m);
         margin-top: -350px;
         input{
             background-color: transparent;
@@ -147,11 +147,20 @@
 .w-full{
     width: 100%;
 }
+.invert{
+    // filter: invert(1);
+    // mix-blend-mode: screen;
+    mix-blend-mode: difference;
 
+
+}
 .navbar{
     top: 0;
-    background: rgb(0,0,0);
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 10%, rgba(19, 19, 19, 0.8) 100%);
+    mix-blend-mode: difference;
+
+    // filter: invert(1);
+    // background: $white;
+    // background: linear-gradient(0deg, rgba(255, 255, 255, 0) 10%, rgba(19, 19, 19, 0.8) 100%);
     transition: all 0.5s ease-in-out;
     
 }
@@ -178,13 +187,13 @@
         display: flex;
     }
     .dialog {
-        background-color: $white;
+        background-color: $notthatwhite;
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         @include padding(3rem, 2rem);
         max-width: 400px;
         width: 90%;
-        position: relative;
+        position: fixed;
 
         .header {
         display: flex;
@@ -193,10 +202,9 @@
         margin-bottom: 20px;
 
         .close-button {
-            @include br($br-xs);
             // @include padding($g-1,$g-1);
             box-sizing: border-box;
-            background-color: $white;
+            background-color: $notthatwhite;
             border: none;
             font-size: 20px;
             cursor: pointer;
@@ -229,9 +237,11 @@
 .lh-6xl{
     line-height: 4rem;
 }
-
+.lh-8xl{
+    line-height: 6rem;
+}
 .lh-5xl{
-    line-height: 5.5rem;
+    line-height: 3rem;
 }
 .lh-3xl{
     line-height: 2rem;
@@ -240,6 +250,12 @@
     box-sizing: border-box;
     background: rgb(0,0,0);
     background: linear-gradient(0deg, rgba(26, 26, 26, 1) 0%, rgba(0,0,0,0 ) 85%, rgba(0, 0, 0, 0.6) 100%,);
+}
+
+.left-right-gradient{
+    box-sizing: border-box;
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgb(26,26,26,0.8) 0%, rgba(0,0,0,0 ) 100%);
 }
 
 .icon-scale{
@@ -262,7 +278,7 @@
     margin-top: -150px;
 
     .floating-island{
-        @include br($br-s);
+        // @include br($br-s);
     }
     .floating-btn{
         position: absolute;
@@ -432,11 +448,12 @@
     }
     
     .lh-footer{
-        line-height: 0;
+        text-align: center;
+        line-height: 20vw;
         display: flex;
         flex-shrink: 1;
         white-space: nowrap;
-        letter-spacing: calc(-1rem + -0.25rem);
+        letter-spacing: calc(-0.5rem + -0.5vw + -0.3rem);
         box-sizing: border-box;
         font-size: 26vw;
         color: $white;
@@ -478,7 +495,7 @@
 .flight-path {
     border: 0;
     width: 2px;
-    height: 80px;
+    height: 90px;
     // background-color:$secondary-white;
     background-image: linear-gradient(to top, $secondary-white 33%, rgba(255,255,255,0) 0%);
     background-position: top;
@@ -496,4 +513,31 @@
 
 .optical-center-logo{
     margin-left: -20px;
+}
+
+.ls-5xl{
+    letter-spacing: -0.05rem;
+}
+.ls-8xl{
+    letter-spacing: -0.1rem;
+}
+
+// .fiter{
+//     mt
+// }
+
+
+.hr-y{
+    margin: 0px $g-8;
+}
+
+.no-scroll{
+    overflow-y: hidden;
+}
+
+.bg-blue{
+    background-color: $blue;
+}
+.color-white{
+    color: $white;
 }

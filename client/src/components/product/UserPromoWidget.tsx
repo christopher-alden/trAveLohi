@@ -6,6 +6,7 @@ import {useContext, useEffect, useState} from 'react';
 import Container from '@comp/container/Container';
 import ss from '@styles/variables/slider.module.scss'
 import { useQuery } from 'react-query';
+import styles from '@styles/global.module.scss'
 
 
 const UserPromoWidget = () => {
@@ -40,17 +41,18 @@ const UserPromoWidget = () => {
 
 	if(isLoading) return <></>
 	return (
-		<Slider label="Exclusive Deals For You!">
+		<Slider gap={styles.g8}  label="Exclusive Deals">
 			{promos.map((promo, index) => {
 				return (
 					<Container
                         key={index}
 						px="0px"
 						py="0px"
-						width="600px"
+						
                         className={`${ss.sliderCard}`}
 					>
-						<Promo promo={promo} height='300px'></Promo>
+						{/* <Promo promo={promo} width="400px" height='550px'></Promo> */}
+						<Promo promo={promo} width="400px" height='550px'></Promo>
 					</Container>
 				);
 			})}
@@ -59,3 +61,10 @@ const UserPromoWidget = () => {
 };
 
 export default UserPromoWidget;
+
+// ckg - dxb
+// arrival.id = ckg or dxb
+// ckg sin
+// sin nrt
+// nrt dxb
+// 
