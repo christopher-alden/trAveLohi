@@ -21,6 +21,19 @@ type User struct {
 	IsBanned               bool        `gorm:"default:false"`
 	IsNewsletter           bool        `gorm:"default:false"`
 	UserPromos             []UserPromo `gorm:"foreignKey:UserID"`
+	Balance                uint        `gorm:"default:0"`
+	Address                string      `gorm:"type:text"`
+	PhoneNumber            string      `gorm:"type:varchar(12)"`
+	UserCC                 UserCC      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+type UserCC struct {
+	gorm.Model
+	UserID uint   `gorm:"not null;unique"`
+	Number string `gorm:"type:varchar(20);not null" json:"number"`
+	Type   string `gorm:"type:varchar(20);not null" json:"type"`
+	CVV    string `gorm:"type:varchar(5);not null" json:"ccv"`
+	Name   string `gorm:"type:varchar(100);not null" json:"name"`
 }
 
 type OTP struct {
@@ -51,5 +64,5 @@ type UserTransaction struct {
 	UserID          uint      `gorm:"not null" json:"userId"`
 	Price           uint      `gorm:"not null" json:"price"`
 	TransactionDate time.Time `gorm:"type:timestamp" json:"transactionDate"`
-	Status string `gorm:"not null" json:"status"`
+	Status          string    `gorm:"not null" json:"status"`
 }

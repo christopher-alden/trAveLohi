@@ -31,11 +31,11 @@ const FlightDetailCard = ({height, flightDetail, isDisplayOnly=false, availableS
                         <Container width="60px" height="100%" center className="no-padding circle bg-notthatwhite">
                             <Picture width="30px" height="25px" src={placeholder} className="invert-soft"/>
                         </Container>
-                        <Container py={styles.g2} height="100%" direction="column" className="no-padding space-between">
-                            <Label>
+                        <Container  height="100%" direction="column" className="no-padding">
+                            <Label className="lh">
                                 {flightDetail.airline?.name}
                             </Label>
-                            <Label color={styles.secondaryWhite} fontSize={styles.fsm}>
+                            <Label color={styles.secondaryWhite}>
                                 {flightDetail.airplane?.code} - {flightDetail.airplane?.type} | {flightDetail.flightRoute?.flightDuration} minutes
                             </Label>
                         </Container>
@@ -47,10 +47,10 @@ const FlightDetailCard = ({height, flightDetail, isDisplayOnly=false, availableS
                                     <Label color={styles.secondaryWhite}>seats available</Label>
                                 </Container>
                             }
-                            <Container gap={styles.g1} className="no-padding items-end justify-end">
-                                <Label color={styles.secondaryWhite}>USD</Label>
+                            <Container gap={styles.g1} className="no-padding items-end  justify-end">
+                                <Label  color={styles.secondaryWhite} >USD</Label>
                                 <Label className="lh-3xl" fontSize={styles.f3xl}>{flightDetail.flightRoute?.price}</Label>
-                                <Label className="no-wrap" color={styles.secondaryWhite}>/ person</Label>
+                                <Label className="no-wrap" color={styles.secondaryWhite} >/person</Label>
                             </Container>
                     </Container>
                 </Container>
@@ -59,11 +59,11 @@ const FlightDetailCard = ({height, flightDetail, isDisplayOnly=false, availableS
                         <Container height="100%" width="80px" center direction="column"  gap={styles.g2} className="no-padding space-between items-end">
                             <Container direction="column" className="no-padding items-end">
                                 <Label color={styles.black}>{formatDateAndTime(flightDetail.flightTime?.departureTime).time}</Label>
-                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.departureTime).date}</Label>
+                                <Label color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.departureTime).date}</Label>
                             </Container>
                             <Container direction="column" className="no-padding items-end">
                                 <Label color={styles.black}>{formatDateAndTime(flightDetail.flightTime?.arrivalTime).time}</Label>
-                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.arrivalTime).date}</Label>
+                                <Label color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.arrivalTime).date}</Label>
                             </Container>
                         </Container>
 
@@ -76,11 +76,11 @@ const FlightDetailCard = ({height, flightDetail, isDisplayOnly=false, availableS
                         <Container height="100%" center direction="column"  gap={styles.g2} className="no-padding space-between items-start">
                             <Container direction="column" className="no-padding">
                                 <Label color={styles.black}>{flightDetail.flightRoute?.departure.city?.name}</Label>
-                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{flightDetail.flightRoute?.departure.name}</Label>
+                                <Label color={styles.secondaryWhite}>{flightDetail.flightRoute?.departure.name}</Label>
                             </Container>
                             <Container direction="column" className="no-padding">
                                 <Label color={styles.black}>{flightDetail.flightRoute?.arrival.city?.name}</Label>
-                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{flightDetail.flightRoute?.arrival.name}</Label>
+                                <Label color={styles.secondaryWhite}>{flightDetail.flightRoute?.arrival.name}</Label>
                             </Container>
                         </Container>
                     </Container>

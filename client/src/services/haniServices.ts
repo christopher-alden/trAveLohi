@@ -53,30 +53,28 @@ export function generateUserTransaction(userId:number, price:number, status:Tran
     }
     return userTransaction
 }
-function generateTicketCode(flightDetail:FlightDetail, traveler:Traveler, seat:SeatDetail){
-    const initials = [
-        flightDetail.airline?.name.charAt(0), // First character of the airline name
-        flightDetail.ID.toString().slice(-1), // Last digit of the flight ID
-        flightDetail.airplane?.type.charAt(0), // First character of the airplane type
-        traveler.passportNumber.slice(-1), // Last character of the passport number
-        seat.ID.toString().slice(-1) // Last digit of the seat ID
-    ].join('').toUpperCase();
 
-    // Generate a random alphanumeric component
-    const randomComponent = Math.random().toString(36).substring(2, 8).toUpperCase();
+// function generateTicketCode(flightDetail:FlightDetail, traveler:Traveler, seat:SeatDetail){
+//     const initials = [
+//         flightDetail.airline?.name.charAt(0), 
+//         flightDetail.ID.toString().slice(-1), 
+//         flightDetail.airplane?.type.charAt(0),
+//         traveler.passportNumber.slice(-1),
+//         seat.ID.toString().slice(-1)
+//     ].join('').toUpperCase();
 
-    // Combine the two components
-    let ticketCode = initials + randomComponent;
+//     const randomComponent = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    // Adjust if the combined string exceeds 10 characters
-    ticketCode = ticketCode.slice(0, 10);
+//     let ticketCode = initials + randomComponent;
 
-    return ticketCode;
+//     ticketCode = ticketCode.slice(0, 10);
 
-}
-export function generateFlightTransaction(flightDetails:FlightDetail, traveler:Traveler, seat:SeatDetail, baggage:number){
+//     return ticketCode;
+
+// }
+
+export function generateFlightTransaction(flightDetails:FlightDetail, seat:SeatDetail, baggage:number){
     const flightTransaction:FlightTransactionPayload = {
-        ticketCode:generateTicketCode(flightDetails,traveler,seat),
         flightId:flightDetails.ID,
         seatId:seat.ID,
         //TODO: roundtrip

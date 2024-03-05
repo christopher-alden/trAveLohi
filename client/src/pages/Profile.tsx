@@ -31,12 +31,13 @@ const Profile = () =>{
     return(
         <Container width="100%" height="100%" className="bg-notthatwhite no-padding no-br" direction="column">
             <Navbar/>
-            <Container width="100%" height="100vh" className="no-padding min-h-full no-br relative" direction="column">
+            <Container width="100%"  className="no-padding min-h-full no-br relative" direction="column">
                 <Container width="100%" height="35%" className="no-padding bg-black no-br justify-end" direction="column">
                     <Container width="100%" height="100%" className="bg-black no-br">
                         <Container className="no-padding push-navbar" direction="column">
                             <Label color={styles.secondaryWhite} fontSize={styles.fxl}>Profile</Label>
                             <Label color={styles.white} className="lh-5xl ls-5xl" fontSize={styles.f5xl}>{user?.firstName + ' ' + user?.lastName}</Label>
+                            <Label color={styles.secondaryWhite} fontSize={styles.fxl}>USD {user?.balance}</Label>
                         </Container>
                     </Container>
 
@@ -56,9 +57,9 @@ const Profile = () =>{
                     
                 </Container>
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <div className="flex-grow bg-notthatwhite">
+                    <Container py={styles.g16} width="100%" height="auto" className="flex-grow bg-notthatwhite">
                         {content?.element}
-                    </div>
+                    </Container>
                 </React.Suspense>
                 
             </Container>

@@ -18,8 +18,8 @@ func CreateFlight(c *fiber.Ctx) error {
 		AirlineID   uint   `json:"airlineId"`
 		Status      string `json:"status"`
 		Flight      struct {
-			Arrival    models.AirportResponse `json:"arrival"`
-			Departure  models.AirportResponse `json:"departure"`
+			Arrival    models.Airport `json:"arrival"`
+			Departure  models.Airport `json:"departure"`
 			FlightDate models.FlightDate      `json:"flightTime"`
 		} `json:"flight"`
 	}
@@ -485,7 +485,7 @@ func CreateCompleteFlightTransaction(c *fiber.Ctx) error {
 	}
 
 	type FlightTransactionRequest struct {
-		TicketCode  string `json:"ticketCode"`
+		// TicketCode  string `json:"ticketCode"`
 		FlightID    uint   `json:"flightId"`
 		SeatID      uint   `json:"seatId"`
 		IsRoundTrip bool   `json:"isRoundTrip"`
@@ -553,8 +553,22 @@ func CreateCompleteFlightTransaction(c *fiber.Ctx) error {
 		}
 
 		flightTransactionReq := request.FlightTransactions[i]
+		var flight models.Flight
+		if err := tx.Where("id = ?", flightTransactionReq.FlightID).Preload("Airline").Preload("Airplane").First(&flight).Error; err != nil {
+			tx.Rollback()
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to find flight", "error": err.Error()})
+		}
+
+		ticketCode, err := generateTicketCode(flight.ID, flight.Airline.Name, flight.Airplane.Type, traveler.PassportNumber, seat.ID)
+		if err != nil {
+			tx.Rollback()
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to generate ticket code", "error": err.Error()})
+		}
+
+
+
 		flightTransaction := models.FlightTransaction{
-			TicketCode:        flightTransactionReq.TicketCode,
+			TicketCode:        ticketCode,
 			UserTransactionID: userTransaction.ID,
 			FlightID:          flightTransactionReq.FlightID,
 			TravelerID:        traveler.ID,
@@ -570,5 +584,8 @@ func CreateCompleteFlightTransaction(c *fiber.Ctx) error {
 	}
 
 	tx.Commit()
-	return c.JSON(fiber.Map{"message": "Complete transaction created successfully"})
+	return c.JSON(fiber.Map{
+		"message": "Success",
+
+	})
 }

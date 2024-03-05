@@ -10,43 +10,31 @@ import (
 )
 
 func SearchAirports(c *fiber.Ctx) error {
-	queryTerm := c.Query("term")
-	queryTerm = "%" + queryTerm + "%"
+    queryTerm := c.Query("term")
+    queryTerm = "%" + queryTerm + "%"
 
-	var airport models.Airport
+    var airports []models.Airport
 
-    var results []map[string]interface{}
+    db := database.GetDB()
 
-	db := database.GetDB()
+    result := db.
+        Model(&models.Airport{}).
+        Joins("JOIN cities ON cities.id = airports.city_id").
+        Joins("JOIN countries ON countries.id = cities.country_id").
+        Preload("City").
+        Preload("City.Country").
+        Where("airports.name ILIKE ? OR cities.name ILIKE ? OR countries.name ILIKE ? OR airports.code ILIKE ?", queryTerm, queryTerm, queryTerm, queryTerm).
+        Limit(5).
+        Find(&airports)
 
-	result := db.
-		Model(&airport).
-		Select(`airports.id, airports.name, airports.code, cities.name AS "city", countries.name AS "country"`).
-		Joins("LEFT JOIN cities ON airports.city_id = cities.id").
-		Joins("LEFT JOIN countries ON cities.country_id = countries.id").
-		Where("airports.name ILIKE ? OR cities.name ILIKE ? OR countries.name ILIKE ? OR airports.code ILIKE ?", queryTerm, queryTerm, queryTerm, queryTerm).
-		Limit(5).
-		Scan(&results)
+    if result.Error != nil {
+        fmt.Printf("Error fetching airport details: %v\n", result.Error)
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to fetch airport details"})
+    }
 
-	if result.Error != nil {
-		fmt.Printf("Error fetching airport details: %v\n", result.Error)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to fetch airport details"})
-	}
-
-	var airports []models.AirportResponse
-	for _, item := range results{
-		var airport models.AirportResponse
-
-		airport.ID = item["id"].(int64)
-		airport.Name = item["name"].(string)
-		airport.Code = item["code"].(string)
-		airport.Country = item["country"].(string)
-		airport.City = item["city"].(string)
-		airports = append(airports, airport)
-	}
-
-	return c.JSON(airports)
+    return c.JSON(airports)
 }
+
 
 func GetAirport(c *fiber.Ctx) error{
 	queryId := c.Query("id")
@@ -99,4 +87,17 @@ func GetCity(c *fiber.Ctx) error{
 	}
 
 	return c.JSON(city)
+}
+
+func SearchCities(c *fiber.Ctx) error {
+	searchTerm := c.Query("name") 
+
+	var cities models.City
+	db := database.GetDB()
+
+	if err := db.Joins("Country").Where("city.name LIKE ? OR country.name LIKE ?", "%"+searchTerm+"%", "%"+searchTerm+"%").First(&cities).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to search for cities"})
+	}
+
+	return c.JSON(cities)
 }

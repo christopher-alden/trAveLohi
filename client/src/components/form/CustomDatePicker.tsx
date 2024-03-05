@@ -6,12 +6,14 @@ import Container from "@comp/container/Container";
 type CustomDatePickerProps = {
     setTime: (time:Date) => void
     mainTheme?: boolean
+    restrictDate?: boolean
 }
 
-const CustomDatePicker = ({ setTime, mainTheme=true}:CustomDatePickerProps) => {
+const CustomDatePicker = ({ setTime, mainTheme=true, restrictDate}:CustomDatePickerProps) => {
     const [selectedDate, setSelectedDate] = useState("");
     const [displayDate, setDisplayDate] = useState("");
     const [displayDay, setDisplayDay] = useState("")
+    const currentDate = new Date().toISOString().split('T')[0];
 
     const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,6 +56,7 @@ const CustomDatePicker = ({ setTime, mainTheme=true}:CustomDatePickerProps) => {
                 <Label color={mainTheme ? styles.secondaryWhite: styles.white} >{displayDay || ''}</Label>
             </Container>
             <input
+                min={restrictDate ? currentDate : ''}
                 id="date-picker"
                 type="date"
                 ref={dateInputRef}

@@ -13,9 +13,12 @@ import { useReservation } from "src/context/reservationContext"
 type FlightReservationCardProps = {
     reservation: FlightReservation
     flightDetail : FlightDetail
+    displayOnly?:boolean
+    baggage?:number
+    price?:number
 }
 
-const FlightReservationCard = ({reservation, flightDetail}: FlightReservationCardProps) =>{
+const FlightReservationCard = ({reservation, flightDetail,displayOnly, baggage,price}: FlightReservationCardProps) =>{
     const [openSeat, setOpenSeat] = useState<boolean>(false);
     const [chosenSeatClass, setChosenSeatClass] = useState(Object.values(SeatClass)[0]); 
     const {updateSeatInReservation} = useReservation()
@@ -24,7 +27,8 @@ const FlightReservationCard = ({reservation, flightDetail}: FlightReservationCar
         setChosenSeatClass(seatClass)
         updateSeatInReservation(reservation.traveler, undefined)
     }
-    const dob = new Date(reservation.traveler.dateOfBirth);
+    // @ts-ignore
+    const dob = new Date(reservation.traveler.dateOfBirth || reservation.traveler.dob);
     return(
         <>
             <Container width="100%" height="375px" className={`bg-white `} direction="row" gap={styles.g4}>
@@ -56,11 +60,11 @@ const FlightReservationCard = ({reservation, flightDetail}: FlightReservationCar
                                         <Container height="100%" width="80px" center direction="column"  gap={styles.g2} className="no-padding space-between items-end">
                                             <Container direction="column" className="no-padding items-end">
                                                 <Label color={styles.black}>{formatDateAndTime(flightDetail.flightTime?.departureTime).time}</Label>
-                                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.departureTime).date}</Label>
+                                                <Label color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.departureTime).date}</Label>
                                             </Container>
                                             <Container direction="column" className="no-padding items-end">
                                                 <Label color={styles.black}>{formatDateAndTime(flightDetail.flightTime?.arrivalTime).time}</Label>
-                                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.arrivalTime).date}</Label>
+                                                <Label color={styles.secondaryWhite}>{formatDateAndTime(flightDetail.flightTime?.arrivalTime).date}</Label>
                                             </Container>
                                         </Container>
 
@@ -73,11 +77,11 @@ const FlightReservationCard = ({reservation, flightDetail}: FlightReservationCar
                                         <Container height="100%" center direction="column"  gap={styles.g2} className="no-padding space-between items-start">
                                             <Container direction="column" className="no-padding">
                                                 <Label color={styles.black}>{flightDetail.flightRoute?.departure.city?.name}</Label>
-                                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{flightDetail.flightRoute?.departure.name}</Label>
+                                                <Label color={styles.secondaryWhite}>{flightDetail.flightRoute?.departure.name}</Label>
                                             </Container>
                                             <Container direction="column" className="no-padding">
                                                 <Label color={styles.black}>{flightDetail.flightRoute?.arrival.city?.name}</Label>
-                                                <Label fontSize={styles.fsm} color={styles.secondaryWhite}>{flightDetail.flightRoute?.arrival.name}</Label>
+                                                <Label color={styles.secondaryWhite}>{flightDetail.flightRoute?.arrival.name}</Label>
                                             </Container>
                                         </Container>
                                     </Container>
@@ -88,15 +92,25 @@ const FlightReservationCard = ({reservation, flightDetail}: FlightReservationCar
                                 <Label fontSize={styles.fxl}>Seat Details</Label>
                                 <Container width="100%" height="100%" className="no-padding space-between"  direction="column">
                                     <Container className="no-padding" direction="column" width="100%" gap={styles.g4}>
-                                        <FormlessDropdown onChange={changeSeatClass} name='class' width='100%' prompt='Class' options={Object.values(SeatClass)}></FormlessDropdown>
-                                        <FormlessDropdown onChange={()=>{}} name='addOnBaggage' width='100%' prompt='Add On Baggage' options={Object.values(AddOnBaggage)}></FormlessDropdown>
+                                        {displayOnly ?
+                                        <>
+                                            <Label>{reservation?.seat?.class}</Label>
+                                            <Label>{baggage ? `${baggage} Kg`: 'No Baggage'}</Label>
+                                        </>:
+                                        <>
+                                            <FormlessDropdown onChange={changeSeatClass} name='class' width='100%' prompt='Class' options={Object.values(SeatClass)}></FormlessDropdown>
+                                            <FormlessDropdown onChange={()=>{}} name='addOnBaggage' width='100%' prompt='Add On Baggage' options={Object.values(AddOnBaggage)}></FormlessDropdown>
+                                        </>}
                                     </Container>
                                     <Container width="100%" gap={styles.g1} direction="row" className="no-padding items-end space-between">
                                         <Container className="no-padding items-end" gap={styles.g4}>
                                             <Label fontSize={styles.fsm}>Seat</Label>
                                             <Label className="lh-3xl" fontSize={styles.f3xl}>{reservation.seat?.code}</Label>
                                         </Container>
-                                        <Button onClick={()=>{setOpenSeat(!openSeat)}} className='outline-btn bg-white'>Choose Seat</Button>
+                                        
+
+                                        {!displayOnly && <Button onClick={()=>{setOpenSeat(!openSeat)}} className='outline-btn bg-white'>Choose Seat</Button>}
+                                        {displayOnly && <Label fontSize={styles.f3xl}>USD {price}</Label>}
                                     </Container>
                                 </Container>
                             </Container>
@@ -105,7 +119,7 @@ const FlightReservationCard = ({reservation, flightDetail}: FlightReservationCar
                 </Container>
             </Container>
             {openSeat&&
-                <Dialog open={true} title='Choose Seat' onClose={()=>{setOpenSeat(false)}}>
+                <Dialog open={true} width="75%" height="80%" title='Choose Seat' onClose={()=>{setOpenSeat(false)}}>
                     <FlightSeat reservation={reservation} flightId={flightDetail.ID} seatClass={chosenSeatClass}/>
                 </Dialog>
             }

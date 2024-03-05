@@ -13,7 +13,9 @@ type DateInputProps = {
 	rules: any;
 	error: any;
 	name: string;
-	// defaultValue?: Date;
+	restrictDate?: boolean
+	today?:boolean
+	defaultValue?: any;
 };
 
 const DatePicker = ({
@@ -26,8 +28,11 @@ const DatePicker = ({
 	width = 'fit-content',
 	height = 'fit-content',
 	color = styles.black,
-	// defaultValue,
+	restrictDate = false,
+	today = false,
+	defaultValue,
 }: DateInputProps) => {
+	const currentDate = new Date().toISOString().split('T')[0];
 	const  divStyle:React.CSSProperties = {
 		width: width,
 		height: height,
@@ -65,11 +70,15 @@ const DatePicker = ({
 				</Container>
 			)}
 			<input
+			defaultValue={defaultValue}
+				max={restrictDate ? currentDate : ''}
+				min={today ? currentDate :''}
 				name={name}
 				id={name}
 				type="date"
 				className={`${className || ''}`}
 				{...register(name, rules)}
+
 				style={{
 					width: '100%',
 					height: '100%',

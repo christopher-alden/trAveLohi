@@ -49,13 +49,14 @@ func Migrate() {
 		db.AutoMigrate(&models.FlightRoute{})
 		db.AutoMigrate(&models.Airplane{})
 		//HOTEL
-		db.AutoMigrate(&models.HotelDetail{})
+		db.AutoMigrate(&models.RoomDetail{})
 		
 		db.AutoMigrate(&models.SeatDetail{})
 		db.AutoMigrate(&models.Flight{})
 
 		db.AutoMigrate(&models.User{})
 		db.AutoMigrate(&models.OTP{})
+		db.AutoMigrate(&models.UserCC{})
 		db.AutoMigrate(&models.Promo{})
 		db.AutoMigrate(&models.UserPromo{})
 
@@ -152,4 +153,5 @@ func Seed() {
 	}
 	seedLocations()
 	seedFlights()
+	SeedHotel()
 }

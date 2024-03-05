@@ -9,20 +9,22 @@ import Picture from '@comp/container/Picture';
 import Container from './Container';
 
 type dialogProps = {
+	width?:string,
+	height?:string,
 	open?: boolean;
 	onClose?: () => void;
 	title?: string;
 	children?: React.ReactNode;
 };
 
-const Dialog = ({open, onClose, title, children}: dialogProps) => {
+const Dialog = ({open, onClose, title, children, width='fit-content', height='fit-content'}: dialogProps) => {
 
 	return (
 		<Container  height='100vh' width='100vw'  className={`popup no-br bg-dim softblur z1000 ${open ? 'open' : ''}`}>
 			{open && (
 				<>
 					<div className="overlay" onClick={onClose}></div>
-					<Container width='60vw' height='80vh' direction='column'  className="dialog no-br  bg-notthatwhite">
+					<Container width={width} height={height} direction='column'  className="dialog no-br  bg-notthatwhite">
 						<div className="header no-br">
 							<Label fontSize={styles.f3xl}>{title}</Label>
 							<Button

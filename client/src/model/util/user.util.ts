@@ -12,6 +12,21 @@ export enum SecurityQuestion{
     Q5 = "What is the model of your first car?"
 }
 
+function calculateAge(dob:string){
+    const birthday = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthday.getFullYear();
+    const m = today.getMonth() - birthday.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+function includeUserGender(gender:UserGender){
+    return (Object.values(UserGender).includes(gender))
+}
+
 export const AttributeRules ={
     firstName:{
         required:"*Required",
@@ -41,11 +56,16 @@ export const AttributeRules ={
         }
         , 
     },
+    confirmPassword:{
+        validate: (value:string, before:string) => value === before || "Passwords do not match"
+    },
     gender: {
         required:"*Required",
+        validate: (value:UserGender) => includeUserGender(value)
     },
     dob: {
         required:"*Required",
+        validate: (value:string) => calculateAge(value) >= 13 || "You must be at least 13 years old",
     },
     securityQuestion: {
         required:"*Required",

@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from 'src/context/userContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 //TYPES
 import { UserGender, SecurityQuestion, AttributeRules  } from '@util/user.util';
@@ -36,10 +36,11 @@ type RegisterResponse = {
 }
 
 const Register = () =>{
-    const { register: registerContext } = useContext(UserContext);
+    const { register: registerContext, loading, user } = useContext(UserContext);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { setupEmail } = useSendEmail();
     const navigate = useNavigate();
+    const [isNewsletter, setIsNewsletter ] = useState<boolean>(false)
 
     const { mutate: registerUser, error, isLoading } = useMutation<RegisterResponse, Error, RegisterUserModel>(registerContext, {
         onSuccess: (data) => {
@@ -58,7 +59,7 @@ const Register = () =>{
 
     const onSubmit = async (data:any) => {
         const transformedUser: RegisterUserModel = {
-        firstName: data.firstName,
+            firstName: data.firstName,
             lastName: data.lastName,
             email: data.email,
             password: data.password,
@@ -71,11 +72,20 @@ const Register = () =>{
             //TODO: yg bener
             role: UserRole.user,
             isBanned: false,
-            isNewsletter: false
+            isNewsletter: isNewsletter
         }
         registerUser(transformedUser);
     };
 
+    useEffect(() => {
+		if(user){
+			navigate('/')
+		}
+	
+	}, [user])
+	
+
+    if(loading)return<></>
 //TODO: validasi sama
     return(
         <Container px='0px' py='0px' width='100%' height='100vh' direction='row'>
@@ -115,11 +125,11 @@ const Register = () =>{
                                 
                                 <TextField name='confirmPassword' register={register} rules={AttributeRules.password} error={errors.confirmPassword} width='100%' color={styles.black} prompt='Confirm Password' outlineColor='black'/>
                                 
-                                <DatePicker name='dateOfBirth' register={register} rules={AttributeRules.dob} error={errors.dateOfBirth} prompt='Date of Birth' width='100%' ></DatePicker>
+                                <DatePicker restrictDate name='dateOfBirth' register={register} rules={AttributeRules.dob} error={errors.dateOfBirth} prompt='Date of Birth' width='100%' ></DatePicker>
                                 <Dropdown  name='gender' register={register} rules={AttributeRules.gender} error={errors.gender} width='100%' prompt='Gender' options={Object.values(UserGender)}></Dropdown>
                                 <Dropdown  name='securityQuestion' register={register} rules={AttributeRules.securityQuestion} error={errors.securityQuestion} width='100%' prompt='Security Question'  options={Object.values(SecurityQuestion)}></Dropdown>
                                 <TextField name='securityQuestionAnswer' register={register} rules={AttributeRules.sqa} error={errors.securityQuestionAnswer} width='100%' color={styles.black} prompt='Security Question Answer' outlineColor='black'/>
-                                <CheckBox>I want to recieve newsletters and updates from trAveLohi</CheckBox>
+                                <CheckBox onChange={(e)=>{setIsNewsletter(e.target.checked)}}>I want to recieve newsletters and updates from trAveLohi</CheckBox>
                                 <Container width='100%' direction='column' px='0px' py={styles.g4} gap={styles.g4}>
                                     <Button submit={true} className='primary-btn'>Register</Button>
                                 </Container>

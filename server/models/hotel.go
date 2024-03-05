@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
@@ -15,11 +17,13 @@ type Hotel struct {
 	CityID      uint           `gorm:"not null" json:"cityId"`
 	City        City           `gorm:"foreignKey:CityID" json:"city,omitempty"`
 	Facilities  []Facility     `gorm:"many2many:hotel_facilities" json:"facilities,omitempty"`
+	RoomDetails []RoomDetail   `gorm:"foreignKey:HotelID" json:"roomDetails,omitempty"`
 }
 
-type HotelDetail struct {
+type RoomDetail struct {
 	gorm.Model
 	HotelID         uint           `gorm:"not null" json:"hotelId"`
+	Name            string         `gorm:"not null" json:"name"`
 	Price           uint           `gorm:"not null" json:"price"`
 	Images          datatypes.JSON `json:"images"`
 	IsFreeBreakfast bool           `json:"isFreeBreakfast"`
@@ -34,17 +38,29 @@ type HotelDetail struct {
 	Hotel           Hotel          `gorm:"foreignKey:HotelID" json:"hotel,omitempty"`
 }
 
+type HotelRoomDetails struct {
+	HotelID          uint `json:"hotelId"`
+	LowestPrice      uint `json:"lowestPrice"`
+	TotalAllocations uint `json:"totalAllocations"`
+}
+
 type Facility struct {
 	gorm.Model
 	Name   string  `gorm:"not null" json:"name"`
 	Hotels []Hotel `gorm:"many2many:hotel_facilities" json:"hotel,omitempty"`
 }
+
 type HotelTransaction struct {
 	gorm.Model
-	ReservationCode   string `gorm:"not null" json:"reservationCode"`
-	TravelerID        string `gorm:"not null" json:"travelerId"`
-	UserTransactionID string `gorm:"not null" json:"userTransactionID"`
+	HotelID           uint      `gorm:"not null" json:"hotelId"`
+	RoomDetailID      uint      `gorm:"not null" json:"roomDetailId"`
+	ReservationCode   string    `gorm:"not null" json:"reservationCode"`
+	UserTransactionID uint    `gorm:"not null" json:"userTransactionID"`
+	CheckInTime       time.Time `gorm:"type:timestamp" json:"checkInTime"`
+	CheckOutTime      time.Time `gorm:"type:timestamp" json:"checkOutTime"`
 
 	UserTransaction UserTransaction `gorm:"foreignKey:UserTransactionID" json:"userTransaction,omitempty"`
-	Traveler        Traveler        `gorm:"foreignKey:TravelerID" json:"traveler,omitempty"`
+	Hotel Hotel `gorm:"foreignKey:HotelID" json:"hotel,omitempty"`
+	RoomDetail RoomDetail `gorm:"foreignKey:RoomDetailID" json:"roomDetail,omitempty"`
+
 }

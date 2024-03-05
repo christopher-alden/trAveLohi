@@ -38,24 +38,30 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({children}) 
 		return res.json()
     };
 
+	console.log(user)
 	// This is for purely for fetching user data, login() from useMutate should invalidateQueries marking stale data
 	// main error and isLoading state
 	const { error:userError, isLoading:userLoading } = useQuery<any, Error>(['userData'], fetchUserData,{
 		retry: false,
-		onSuccess: (rawData)=> {
+		onSuccess: (entry)=> {
 			const transformedData :UserModel = {
-					ID: rawData.ID,
-					firstName: rawData.FirstName,
-					lastName: rawData.LastName,
-					email: rawData.Email,
-					dateOfBirth: rawData.DateOfBirth,
-					gender: rawData.Gender,
-					profilePhoto: rawData.ProfilePhoto,
-					securityQuestion: rawData.SecurityQuestion,
-					securityQuestionAnswer: rawData.SecurityQuestionAnswer,
-					role: rawData.Role,
-					isBanned: rawData.IsBanned,
-					isNewsletter: rawData.IsNewsletter,
+					ID: entry.ID,
+					firstName: entry.FirstName,
+					lastName: entry.LastName,
+					email: entry.Email,
+					dateOfBirth: entry.DateOfBirth,
+					gender: entry.Gender,
+					profilePhoto: entry.ProfilePhoto,
+					securityQuestion: entry.SecurityQuestion,
+					securityQuestionAnswer: entry.SecurityQuestionAnswer,
+					role: entry.Role,
+					isBanned: entry.IsBanned,
+					isNewsletter: entry.IsNewsletter,
+					phoneNumber: entry.PhoneNumber,
+					balance: entry.Balance,
+					address: entry.Address,
+					ccId: entry.UserCC.ID,
+					userCC: entry.UserCC
 				}
 			setUser(transformedData)
 		}
@@ -75,8 +81,10 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({children}) 
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(userDataForApi),
 		});
-		if(!res.ok) throw new Error('Failed to fetch')
 		const data = await res.json()
+		console.log(data.error)
+		if(!res.ok) throw new Error('Failed to fetch')
+
 		return {data: data, email:userData.email}
 	};
 
@@ -113,8 +121,9 @@ export const UserProvider: React.FC<{children: React.ReactNode}> = ({children}) 
 			credentials: 'include',
 			body: JSON.stringify(otpUser)
 		});
-		if(!res.ok) throw new Error('Failed to login')
-		return res.json()
+		const data = await res.json()
+		if(!res.ok) throw new Error(data.message)
+		return data
 	}
 
 	return (

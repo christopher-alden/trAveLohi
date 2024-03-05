@@ -91,7 +91,6 @@ const FlightDetails = () => {
     }, [])
     
 
-    
     if(isLoading || seatLoading)return <></>
     return(
         <ProtectedRoute>
@@ -100,7 +99,7 @@ const FlightDetails = () => {
                 <Container direction="column" gap={styles.g8} width="100%" className="push-navbar min-h-full">
                     <Container direction="column" className="no-padding" width="100%"  gap={styles.g8}>
                         <Container className="no-padding items-end" gap={styles.g2}>
-                            <Label color={styles.secondaryWhite}  fontSize={styles.fxl} className="pointer" onClick={()=>{navigate(`${backLink('explore')}`)}}>Explore</Label>
+                            <Label color={styles.secondaryWhite}  fontSize={styles.fxl} className="pointer" onClick={()=>{navigate(`${backLink('flights')}`)}}>Flights</Label>
                             <Label color={styles.secondaryWhite} fontSize={styles.fxl}>/</Label>
                             <Label color={styles.black} className="lh-5xl" fontSize={styles.f5xl}> Flight Details</Label>
                         </Container>
@@ -135,7 +134,7 @@ const FlightDetails = () => {
                                     </Container>
                                 :
                                     <Container direction="column" width="100%" className="no-padding" gap={styles.g4}>
-                                        {reservations.map((reservation, index) => (
+                                        {reservations?.map((reservation, index) => (
                                             <Button key={index} className="spaced-btn ">
                                                 <Label key={index}>{reservation.traveler.firstName} {reservation.traveler.lastName}</Label>
                                                 <div onClick={()=>{removeReservation(reservation.traveler)}}>

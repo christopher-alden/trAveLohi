@@ -26,7 +26,7 @@ const Slider = ({children, label, gap=`${styles.g4}`}:sliderProps) =>{
             </Container>
             
             
-            <Container className={`${ss.slider} no-br`} width="100vw" py="0px" gap={gap}>
+            <Container className={`${ss.slider} no-br`} width="100vw" py={styles.g4} gap={gap}>
                 {children}
             </Container>
         </>

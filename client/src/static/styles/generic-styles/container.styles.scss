@@ -3,6 +3,9 @@
 .push-navbar{
     margin-top: 100px
 }
+.push-navbar-more{
+    margin-top: 150px
+}
 
 .flex-grow{
     flex-grow: 1
@@ -10,20 +13,20 @@
 .basic-container{
     @include padding(3rem, 2rem);
     display: flex;
-    @include br($br-s);
+    // @include br($br-s);
     box-sizing: border-box;
 }
 .center-container{
     @include padding(3rem, 2rem);
     @include center-flex;
-    @include br($br-s);
+    // @include br($br-s);
     box-sizing: border-box;
 }
 
 .border-container{
     @include padding(3rem, 2rem);
     display: flex;
-    @include br($br-s);
+    // @include br($br-s);
     box-sizing: border-box;
     border: solid 1px $secondary-white;
 }
@@ -67,9 +70,11 @@
     }
 }
 
-
+.strike{
+    text-decoration: line-through;
+}
 .bg-dim{
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 .bg-soft-dim{
     background-color: rgba(0, 0, 0, 0.6);
@@ -249,7 +254,7 @@
 .top-bottom-gradient{
     box-sizing: border-box;
     background: rgb(0,0,0);
-    background: linear-gradient(0deg, rgba(26, 26, 26, 1) 0%, rgba(0,0,0,0 ) 85%, rgba(0, 0, 0, 0.6) 100%,);
+    background: linear-gradient(0deg, rgb(16, 16, 16) 0%, rgba(0,0,0,0 ) 75%, rgba(0, 0, 0, 0.6) 100%,);
 }
 
 .left-right-gradient{
@@ -295,7 +300,6 @@
 .outline{
     outline: 1px solid $black;
 }
-
 .outline-less{
     outline: 2px solid rgba(0, 0, 0, 0.1);
 }
@@ -319,7 +323,9 @@
     overflow-x: visible;
 }
 
-
+.lh{
+    line-height: 1.75rem;
+}
 .frieren{
     position: absolute;
     bottom: 0px;
@@ -370,6 +376,9 @@
 }
 .justify-center{
     justify-content: center;
+}
+.justtify-start{
+    justify-content: start;
 }
 
 .none{
@@ -541,3 +550,26 @@
 .color-white{
     color: $white;
 }
+
+.wrap{
+    flex-wrap: wrap;
+}
+.fuck-grow{
+    flex-grow: 0;
+}
+
+
+.line-clamp-3{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.line-clamp-2{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+

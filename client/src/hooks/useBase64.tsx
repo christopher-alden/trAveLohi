@@ -26,7 +26,13 @@ const useBase64 = () => {
         reader.readAsDataURL(image);
     };
 
-    return { base64, base64Sep, error, processImageToBase64 };
+    const reset = () =>{
+        setBase64(null)
+        setBase64Sep(null)
+        setError(null)
+    }
+
+    return { base64, base64Sep, error, processImageToBase64, reset };
 };
 
 export default useBase64

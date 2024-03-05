@@ -2,7 +2,7 @@ import Container from "@comp/container/Container"
 import Label from "@comp/form/Label"
 import SelectSearch from "@comp/form/SelectSearch";
 import { Flight } from "@myTypes/flight.types";
-import { Airport } from "@myTypes/location.types";
+import { AirportDetails } from "@myTypes/location.types";
 import styles from '@styles/global.module.scss';
 import { Dispatch, SetStateAction } from "react";
 import { useCallback } from "react";
@@ -16,14 +16,14 @@ type FlightSearchWidgetProps = {
 }
 const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTime: null}, setFlight, mainTheme = true}:FlightSearchWidgetProps) =>{
 
-	const updateArrival = useCallback((newArrival: Airport) => {
+	const updateArrival = useCallback((newArrival: AirportDetails) => {
 		setFlight((currentFlight) => ({
 			...currentFlight,
 			arrival: newArrival,
 		}));
 	}, [setFlight])
     
-	const updateDeparture =useCallback((newDeparture: Airport) => {
+	const updateDeparture =useCallback((newDeparture: AirportDetails) => {
 		setFlight((currentFlight) => ({
 			...currentFlight,
 			departure: newDeparture,
@@ -84,7 +84,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
                             <SelectSearch mainTheme={mainTheme} getSelected={updateDeparture} selectedLocation={flight.departure}></SelectSearch>
 							{flight.departure && (
 								<Label className="no-wrap" color={mainTheme ? styles.secondaryWhite: styles.white}>
-									{flight.departure.code}, {flight.departure.city}, {flight.departure.country}
+									{flight.departure.code}, {flight.departure.city?.name}, {flight.departure.country}
 								</Label>
 							)}
 						</Container>
@@ -112,7 +112,7 @@ const FlightSearchWidget = ({flight = {departure: null, arrival: null, flightTim
                             <SelectSearch mainTheme={mainTheme}  getSelected={updateArrival} selectedLocation={flight.arrival}></SelectSearch>
 							{flight.arrival && (
 								<Label className="no-wrap" color={mainTheme ? styles.secondaryWhite: styles.white}>
-									{flight.arrival.code}, {flight.arrival.city}, {flight.arrival.country}
+									{flight.arrival.code}, {flight.arrival.city?.name}, {flight.arrival.country}
 								</Label>
 							)}
 						</Container>

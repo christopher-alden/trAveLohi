@@ -11,7 +11,11 @@ const Explore = React.lazy(() => import('@pages/Explore'));
 const Profile = React.lazy(() => import('@pages/Profile'));
 const FlightDetails = React.lazy(() => import('@pages/FlightDetails'));
 const FlightReservation = React.lazy(() => import('@pages/FlightReservation'));
-const MyReservations = React.lazy(() => import('@pages/MyReservations'));
+// const MyReservations = React.lazy(() => import('@pages/MyReservations'));
+const HotelDetails = React.lazy(() => import('@pages/HotelDetails'));
+const HotelReservation = React.lazy(() => import('@pages/HotelReservation'));
+const GamePage = React.lazy(() => import('@pages/GamePage'));
+
 
 export const MappedRoutes = [
     {
@@ -44,7 +48,7 @@ export const MappedRoutes = [
     },
     {
         element: <Explore/>,
-        path:'/explore',
+        path:'/explore/:type',
     },
     {
         element: <Profile/>,
@@ -59,7 +63,15 @@ export const MappedRoutes = [
         path:'/explore/flight-details/flight-reservation',
     },
     {
-        element: <MyReservations/>,
-        path:'/my-reservations',
+        element: <HotelDetails/>,
+        path:'/explore/hotel-details',
+    },
+    {
+        element: <HotelReservation/>,
+        path:'/explore/hotel-details/hotel-reservation',
+    },
+    {
+        element: <GamePage/>,
+        path:'/game',
     },
 ]

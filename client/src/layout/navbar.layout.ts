@@ -5,19 +5,15 @@ export const NavbarRoutes = [
     },
     {
         name: "Explore",
-        path:'/explore',
-    },
-    {
-        name: "My Reservations",
-        path:'/my-reservations',
+        path:'/explore/flights',
     },
     {
         name: "Geo Guesser",
         path:'/geoguesser',
     },
     {
-        name: "History",
-        path:'/reservations',
+        name: "Game",
+        path:'/game',
     },
 
 ]

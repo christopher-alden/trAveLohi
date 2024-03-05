@@ -25,7 +25,7 @@ const Home = () => {
 
 	const searchBuilder = () =>{
 		
-		let searchQuery = `/explore?searchMode=${encodeURIComponent('flights')}`
+		let searchQuery = `/explore/flights/?searchMode=${encodeURIComponent('flights')}`
 
 		//TODO: ini case kalo flight doang
 		if(chosenFlight){

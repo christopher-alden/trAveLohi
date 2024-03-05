@@ -26,7 +26,7 @@ const useContent = (userRole: UserRole | undefined) => {
                 key: key,
             }));
             
-            setContents(accessibleContent );
+            setContents(accessibleContent);
         }
         else if(userRole === UserRole.user){
             const accessibleContent = Object.entries(UserSidebarLayout).map(([key, {name, element}]) => ({
@@ -35,7 +35,7 @@ const useContent = (userRole: UserRole | undefined) => {
                 key: key,
             }));
             
-            setContents(accessibleContent );
+            setContents(accessibleContent);
         }
         else {
             setContents([]);

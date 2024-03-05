@@ -22,7 +22,7 @@ import Button from '@comp/form/Button';
 import FloatingSearch from './FloatingSearch';
 import debounce from 'lodash.debounce'
 import { useSearch } from 'src/context/searchContext';
-import { Airport } from '@myTypes/location.types';
+import { Airport, AirportDetails } from '@myTypes/location.types';
 
 const Navbar = () =>{
     const {handleSearch, searchResults, searchMode , execSearch} = useSearch();
@@ -49,10 +49,10 @@ const Navbar = () =>{
         
     };
 
-    const searchBuilder = (location:Airport) =>{
+    const searchBuilder = (location:AirportDetails) =>{
         let searchQuery = '';
         if(searchMode == 'flights'){
-            searchQuery = `/explore?searchMode=${encodeURIComponent('flights')}&searchType=${encodeURIComponent('location')}`
+            searchQuery = `/explore/flights/?searchMode=${encodeURIComponent('flights')}&searchType=${encodeURIComponent('location')}`
             searchQuery = searchQuery + `&departureId=${encodeURIComponent(location.ID)}&arrivalId=${encodeURIComponent(location.ID)}`
         }
         console.log(searchQuery)
@@ -139,7 +139,7 @@ const Navbar = () =>{
                             onClick={() => {searchBuilder(result)}}
                             color={styles.white}
                         >
-                            {`${result.city}, ${result.country}`}
+                            {`${result.city?.name}, ${result.country}`}
                         </Label>
                     ))}
                 </FloatingSearch>

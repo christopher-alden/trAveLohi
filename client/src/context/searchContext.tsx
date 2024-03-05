@@ -1,5 +1,5 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import { Airport } from '@myTypes/location.types';
+import { Airport, AirportDetails } from '@myTypes/location.types';
 import {ApiEndpoints} from '@util/api.utils';
 import debounce from 'lodash.debounce'
 import { useQuery } from 'react-query';
@@ -11,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 
 interface SearchContextType {
 	searchTerm: string;
-	// setSearchTerm: (term: string) => void;
-	searchResults: Airport[];
-	setSearchResults: (results: Airport[]) => void;
+	setSearchTerm: (term: string) => void;
+	searchResults: AirportDetails[];
+	setSearchResults: (results: AirportDetails[]) => void;
 	searchMode: 'hotels' | 'flights';
 	setSearchMode: (mode: 'hotels' | 'flights') => void;
 	performSearch: () => Promise<void>;
@@ -25,6 +25,7 @@ interface SearchContextType {
 const SearchContextDefaultValues: SearchContextType = {
 	searchTerm: '',
 	searchResults: [],
+	setSearchTerm: ()=>{},
 	setSearchResults: () => {},
 	searchMode: 'flights',
 	setSearchMode: () => {},
@@ -41,7 +42,7 @@ export const useSearch = () => useContext(SearchContext);
 
 export const SearchProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
 	const [searchTerm, setSearchTerm] = useState('');
-	const [searchResults, setSearchResults] = useState<Airport[]>([]);
+	const [searchResults, setSearchResults] = useState<AirportDetails[]>([]);
 	const [searchMode, setSearchMode] = useState<'hotels' | 'flights'>('flights');
 
 	const navigate = useNavigate()
@@ -90,9 +91,18 @@ export const SearchProvider: React.FC<{children: React.ReactNode}> = ({children}
 		onSuccess: (data) =>{
 			if(searchMode == 'flights'){
 				if(data == null) throw new Error('No data')
-				const airports: Airport[] = data.map((item: any) => ({
-					...item,
-					ID:item.id,
+				console.log(data)
+				const airports: AirportDetails[] = data.map((item: any) => ({
+					ID: item.ID,
+					name: item.name,
+					code :item.code,
+					country:item.city.country.name,
+					city:{
+						...item.city,
+						country: {
+							...item.city.country
+						}
+					}
 				}));
 				setSearchResults(airports)
 			}
@@ -106,7 +116,7 @@ export const SearchProvider: React.FC<{children: React.ReactNode}> = ({children}
 
 	return (
 		<SearchContext.Provider
-			value={{searchTerm, handleSearch, searchResults, setSearchResults, searchMode, setSearchMode, performSearch, execSearch, isLoading}}
+			value={{searchTerm,setSearchTerm, handleSearch, searchResults, setSearchResults, searchMode, setSearchMode, performSearch, execSearch, isLoading}}
 		>
 			{children}
 		</SearchContext.Provider>

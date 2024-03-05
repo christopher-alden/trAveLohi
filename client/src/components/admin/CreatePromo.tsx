@@ -15,7 +15,7 @@ import { useMutation } from "react-query";
 
 
 const CreatePromo = () =>{
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Promo>({
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<Promo>({
         defaultValues: {
             image: undefined,
             amount: 0,
@@ -50,6 +50,7 @@ const CreatePromo = () =>{
 
     const onSubmit = (data: any) =>{
         createPromo(data)
+        reset()
     }
 
     const { mutate: createPromo, error, isLoading } = useMutation(
@@ -63,6 +64,7 @@ const CreatePromo = () =>{
                 image: base64,
                 isValid: promo.isValid.toString(),
             };
+            console.log(promoForApi)
     
             const res = await fetch(ApiEndpoints.PromoCreate, {
                 method: 'POST',
@@ -99,8 +101,8 @@ const CreatePromo = () =>{
                                     <TextField color={styles.secondaryWhite} outlineColor={styles.secondaryBlack} name='code' register={register} rules={{ required: "*Required" }} error={errors.code} width='100%' prompt='Promo Code' />
                                     <TextField color={styles.secondaryWhite} outlineColor={styles.secondaryBlack} name='description' register={register} rules={{ required: "*Required" }} error={errors.description} width='100%' prompt='Description' />
                                     <TextField color={styles.secondaryWhite} outlineColor={styles.secondaryBlack} name='amount' type="number" register={register} rules={{ required: "*Required" }} error={errors.amount} width='100%' prompt='Amount' />
-                                    <DatePicker color={styles.secondaryWhite} className=" bg-transparent outline-secondary calendar-light" name='fromDate' register={register} rules={{ required: "*Required" }} error={errors.fromDate} prompt='From Date' width='100%' />
-                                    <DatePicker color={styles.secondaryWhite} className="bg-transparent outline-secondary calendar-light" name='toDate' register={register} rules={{ required: "*Required" }} error={errors.toDate} prompt='To Date' width='100%' />
+                                    <DatePicker today color={styles.secondaryWhite} className=" bg-transparent outline-secondary calendar-light" name='fromDate' register={register} rules={{ required: "*Required" }} error={errors.fromDate} prompt='From Date' width='100%' />
+                                    <DatePicker today color={styles.secondaryWhite} className="bg-transparent outline-secondary calendar-light" name='toDate' register={register} rules={{ required: "*Required" }} error={errors.toDate} prompt='To Date' width='100%' />
                                     <Container width="100%" direction="column" px='0px' py={styles.g4} gap={styles.g1}>
                                         <label className="custom-file-upload" htmlFor="file">Input Promo Image</label>
                                         <input id="file" onChange={handleFileChange} className="input-file" type="file" accept="image/*" />

@@ -15,6 +15,6 @@ const Label = ({ children, fontSize = styles.fbase, color=styles.black, fontWeig
 		fontWeight:fontWeight
 	};
 
-	return <div onClick={onClick} style={style} className={className}>{children}</div>;
+	return <div onClick={onClick} style={style} className={`${className}`}>{children}</div>;
 };
 export default Label;

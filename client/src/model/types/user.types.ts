@@ -17,6 +17,11 @@ export interface UserModel{
     role: UserRole,
     isBanned: boolean,
     isNewsletter: boolean
+    phoneNumber?:string,
+    balance?: number
+    address?: string
+    ccId?:number
+    userCC?: UserCC
 }
 
 export interface RegisterUserModel extends UserModel{
@@ -58,3 +63,29 @@ export enum TransactionType {
     Pending = 'pending'
 }
 
+
+
+export interface UserUpdatePayload {
+    userId: number;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+    gender?: string;
+    dateOfBirth?: string;
+    address?: string;
+    isNewsletter?: boolean;
+    profilePhoto?: string;
+}
+
+
+export interface UserCC {
+    number: string;
+    type: string;
+    cvv: string;
+    name: string;
+    }
+
+export interface TopUpFormData {
+    ccDetails: UserCC;
+    topUpAmount: number;
+}

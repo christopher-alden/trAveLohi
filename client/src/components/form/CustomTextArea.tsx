@@ -72,19 +72,28 @@ const CustomTextArea = ({
 				</Container>
 			)}
 			<textarea
-				id={name}
-				name={name}
-				style={{
-					width: '100%',
-					height: '100%',
-					color: color,
-					outlineColor: `${outlineColor || ''}`,
-				}}
-				{...register(name, rules)}
-				placeholder={placeholder}
-				className={`basic-text-area ${className || ''}`}
-				defaultValue={defaultValue}
-			/>
+			rows="10" cols="45"
+                id={name}
+                name={name}
+                style={{
+                    resize: 'none', // Keep this to prevent resizing
+                    boxSizing: 'border-box',
+                    paddingInline: `${styles.g4}`,
+                    paddingBlock: `${styles.g2}`,
+                    width: '100%', // Ensures it fills the div
+                    height: '100%', // Ensures it fills the div, adjust if necessary
+                    maxWidth: '100%', // Prevents it from exceeding the div
+                    maxHeight: '100%', // Adjusts height within the div
+                    color: color,
+                    outlineColor: `${outlineColor || ''}`,
+                    overflowX: 'hidden', // Enables vertical scrolling
+					wordWrap:'break-word'
+                }}
+                {...register(name, rules)}
+                placeholder={placeholder}
+                className={`basic-text-area ${className || ''}`}
+                defaultValue={defaultValue}
+            />
 		</div>
 	);
 };

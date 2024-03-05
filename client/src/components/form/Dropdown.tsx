@@ -14,6 +14,7 @@ type DropdownProps = {
 	register: any;
 	rules:any;
 	error:any;
+	defaultValue?:any
 };
 
 const Dropdown = ({
@@ -27,6 +28,7 @@ const Dropdown = ({
 	register,
 	rules,
 	error,
+	defaultValue,
 }: DropdownProps) => {
 	const divStyle:React.CSSProperties = {
 		width: width,
@@ -60,6 +62,7 @@ const Dropdown = ({
 				}}
 			>
 				<select
+					defaultValue={defaultValue}
 					className={`basic-dropdown ${className || ''}`}
 					style={{
 						width: '100%',

@@ -1,15 +1,19 @@
-import '@styles/generic-styles/form.styles.scss'
-type checkBoxProps = {
+import React from 'react';
+
+type CheckBoxProps = {
     children: React.ReactNode;
+    name?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    defaultValue?: boolean;
 }
 
-const CheckBox = ({children}:checkBoxProps) =>{
+const CheckBox = ({children, name, onChange, defaultValue}: CheckBoxProps) => {
     return (
         <label className="checkbox">
-            <input type="checkbox"/>
+            <input defaultChecked={defaultValue} type="checkbox" name={name} onChange={onChange} />
             {children}
         </label>
     );
 }
 
-export default CheckBox
+export default CheckBox;

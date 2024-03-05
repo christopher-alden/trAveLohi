@@ -57,6 +57,7 @@ const OTP = () => {
     const { loading, loginOTP } = useContext(UserContext);
     const { register: emailRegister, formState: { errors: emailError }, handleSubmit: emailSubmit, reset: resetEmailForm } = useForm();
     const { setupEmail, isLoading:sendEmailLoading } = useSendEmail();
+    const [errMsg, setErrMsg] = useState('')
 
     const [emailSent, setEmailSent] = useState(false);
     const [email, setEmail] = useState<string>('');
@@ -82,6 +83,10 @@ const OTP = () => {
             dispatch({ type: OPEN_SUCCESS_DIALOG });
             delayNavigate()
         },
+        onError: (error)=>{
+            setErrMsg(error.message)
+            dispatch({ type: OPEN_FAILURE_DIALOG });
+        }
         
     });
 
@@ -98,7 +103,7 @@ const OTP = () => {
                 resetEmailForm();
             },
             onError: (error) =>{
-                console.error('Error sending email:', error);
+                setErrMsg(error.message)
                 dispatch({ type: OPEN_FAILURE_DIALOG });
             }
         }
@@ -124,7 +129,7 @@ const OTP = () => {
         return () => clearTimeout(timer);
     }
 
-    if(sendEmailLoading)return <>Email is fucking loading</>
+    // if(sendEmailLoading)return <>Email is fucking loading</>
 
     return (
         <>
@@ -179,21 +184,23 @@ const OTP = () => {
                             <Container  direction='column' px="0px" py={styles.g4} width='100%' gap={styles.g4}>
                                 <TextField name='email' register={emailRegister} rules={AttributeRules.email} error={emailError.email} width='100%' color={styles.black} prompt='Email' outlineColor='black' />
                             </Container>
-                            <Button submit={true} className='primary-btn' victor={loading}>
-                                {loading ? "Loading" : "Continue"}
+                            <Button submit={true} className='primary-btn' victor={sendEmailLoading}>
+                                {sendEmailLoading ? "Loading" : "Continue"}
                             </Button>
                         </Container>
                     </form>
                 }
             </Container>
             {state.successDialogOpen && (
-                <Dialog open={true} title='Success' onClose={closeDialog}>
-                    We'll redirect you in a few seconds
+                <Dialog width='30vw' open={true} title='Success' onClose={closeDialog}>
+                    <Label>We'll redirect you in a few seconds</Label>
                 </Dialog>
             )}
             {state.failureDialogOpen && (
-                <Dialog open={true} title='Forgot your email?' onClose={closeDialog}>
-                    Failed to send OTP to your email, please check again and retry :/
+                <Dialog width='30vw' open={true} title='Oops' onClose={closeDialog}>
+                        <Label>{errMsg}</Label>
+
+                    
                 </Dialog>
             )}
         </>

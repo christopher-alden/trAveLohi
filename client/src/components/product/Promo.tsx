@@ -22,10 +22,10 @@ const Promo = ({ promo, width = "100%", height }: promoTypes) => {
             <Container className="no-padding justify-end items-end" direction="row" width="100%" height="15%">
                 <Container className="no-padding items-start justify-end" direction="column" width="60%">
                     <Label color={styles.black} className={`${ss.sliderDesc}`}>{promo.description}</Label> 
-                    <Label color={styles.secondaryWhite} fontSize={styles.fsm} className={`${ss.sliderValidText}`}>{validFromDate.toLocaleDateString()} - {validToDate.toLocaleDateString()}</Label>
+                    <Label color={styles.secondaryWhite} className={`${ss.sliderValidText}`}>{validFromDate.toLocaleDateString()} - {validToDate.toLocaleDateString()}</Label>
                 </Container>
                 <Container className="no-padding justify-end items-end" width="40%">
-                    <Label color={styles.black} className={`${ss.sliderDesc}`} fontSize={styles.fxl}>[{promo.code}]</Label> 
+                    <Label color={styles.black} className={`${ss.sliderDesc} lh`} fontSize={styles.fxl}>[{promo.code}]</Label> 
                 </Container>
             </Container>
             {/* <Container width='100%' height='80%' className="abs left-right-gradient no-br z-18"/> */}

@@ -37,4 +37,21 @@ func Setup(app *fiber.App) {
 	// app.Post("/api/create-user-transaction", controllers.CreateUserTransaction)
 	// app.Post("/api/create-flight-transaction", controllers.CreateFlightTransaction)
 	// app.Post("/api/create-traveler", controllers.CreateTraveler)
+	app.Patch("/api/user/:ID/ban", controllers.BAN)
+	app.Post("/api/create-hotel", controllers.CreateHotel)
+	app.Post("/api/create-room-details", controllers.CreateRoomDetails)
+	app.Get("/api/get-all-hotels", controllers.GetAllHotel)
+	app.Get("/api/get-hotel-and-room-details", controllers.GetHotelAndRoomDetails)
+	app.Post("/api/create-complete-hotel-transaction", controllers.CreateCompleteHotelTransaction)
+	app.Post("/api/update-user-profile", controllers.UpdateUserProfile)
+	app.Post("/api/update-password", controllers.UpdatePassword)
+	app.Post("/api/update-hotel-time", controllers.UpdateHotelTime)
+	app.Put("/api/update-promo", controllers.UpdatePromo)
+
+	app.Put("/api/user/cc", controllers.UpdateOrCreateUserCC)
+	app.Get("/api/get-cart", controllers.GetCart)
+	app.Get("/api/search-cities", controllers.SearchCities)
+	app.Post("/api/hotel-pay", controllers.ChangeHotelTransactionStatus)
+
+
 }

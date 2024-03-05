@@ -149,6 +149,67 @@ func assignPromoToAllUser(promo models.Promo) error {
 	return nil
 }
 
+func UpdatePromo(c *fiber.Ctx) error {
+	type UpdatePromoRequest struct {
+		ID uint `json:"id"`
+		Code        *string `json:"code"`
+		Image       *string `json:"image,omitempty"`
+		Amount      *int    `json:"amount,omitempty"`
+		Description *string `json:"description,omitempty"`
+		FromDate    *string `json:"fromDate,omitempty"`
+		ToDate      *string `json:"toDate,omitempty"`
+		IsValid     *bool   `json:"isValid,omitempty"`
+	}
+
+	var request UpdatePromoRequest
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Request parsing failed"})
+	}
+
+	var promo models.Promo
+	db := database.GetDB() 
+
+	if err := db.Where("id = ?", request.ID).First(&promo).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Promo not found"})
+	}
+
+	if request.Image != nil {
+		promo.Image = *request.Image
+	}
+	if request.Code != nil {
+		promo.Code = *request.Code
+	}
+	if request.Amount != nil {
+		promo.Amount = *request.Amount
+	}
+	if request.Description != nil {
+		promo.Description = *request.Description
+	}
+	if request.FromDate != nil {
+		fromDate, err := time.Parse("2006-01-02T15:04:05.000Z", *request.FromDate)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid from date format"})
+		}
+		promo.FromDate = fromDate
+	}
+	if request.ToDate != nil {
+		toDate, err := time.Parse("2006-01-02T15:04:05.000Z", *request.ToDate)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid to date format"})
+		}
+		promo.ToDate = toDate
+	}
+	if request.IsValid != nil {
+		promo.IsValid = *request.IsValid
+	}
+
+	if err := db.Save(&promo).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to update promo", "error": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"message": "Promo updated successfully", "promo": promo})
+}
+
 // func CreateTraveler(c *fiber.Ctx) error {
 //     var request struct {
 //         FirstName      string `json:"firstName"`
@@ -196,3 +257,76 @@ func assignPromoToAllUser(promo models.Promo) error {
 //     }
 // }
 
+func GetCart(c *fiber.Ctx) error {
+	db := database.GetDB()
+
+	limitQuery := c.Query("limit", "10")
+	offsetQuery := c.Query("offset", "0")
+	mode := c.Query("mode")
+	userIDQuery := c.Query("userID")
+    if userIDQuery == "" {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "User ID is required"})
+    }
+
+	userId, err := strconv.Atoi(userIDQuery)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid limit query parameter"})
+	}
+	limit, err := strconv.Atoi(limitQuery)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid limit query parameter"})
+	}
+
+	offset, err := strconv.Atoi(offsetQuery)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid offset query parameter"})
+	}
+
+	subQuery := db.Model(&models.UserTransaction{}).Select("id").Where("status = ? AND user_id = ?", "cart", userId)	
+	switch mode {
+	case "flights":
+		var flightTransactions []*models.FlightTransaction
+		err = db.Model(&models.FlightTransaction{}).
+			Where("user_transaction_id IN (?)", subQuery).
+			Preload("UserTransaction").
+			Preload("Flight").
+			Preload("Flight.Airplane").
+			Preload("Flight.Airplane.Airline").
+			Preload("Flight.FlightRoute").
+			Preload("Flight.FlightRoute.ArrivalAirport").
+			Preload("Flight.FlightRoute.ArrivalAirport.City").
+			Preload("Flight.FlightRoute.ArrivalAirport.City.Country").
+			Preload("Flight.FlightRoute.DepartureAirport").
+			Preload("Flight.FlightRoute.DepartureAirport.City").
+			Preload("Flight.FlightRoute.DepartureAirport.City.Country").
+			Preload("Flight.Airline").
+			Preload("SeatDetail").
+			Preload("Traveler").
+			Offset(offset).
+			Limit(limit).
+			Find(&flightTransactions).Error
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to query flight transactions"})
+		}
+		return c.JSON(flightTransactions)
+
+	case "hotels":
+		var hotelTransactions []*models.HotelTransaction
+		err = db.Model(&models.HotelTransaction{}).
+			Where("user_transaction_id IN (?)", subQuery).
+			Preload("UserTransaction").
+			Preload("Hotel").
+			Preload("RoomDetail").
+			Offset(offset).
+			Limit(limit).
+			Find(&hotelTransactions).Error
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to query hotel transactions"})
+		}
+		return c.JSON(hotelTransactions)
+	
+
+	default:
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid mode query parameter"})
+	}
+}

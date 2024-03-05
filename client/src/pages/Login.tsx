@@ -16,7 +16,7 @@ import Button from '@comp/form/Button';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserContext } from 'src/context/userContext';
 
 //TYPES
@@ -28,7 +28,7 @@ import { useMutation } from 'react-query';
 
 const Login = () => {
 	const { register, handleSubmit, formState: { errors } } = useForm();
-	const { login } = useContext(UserContext);
+	const { login, loading, user } = useContext(UserContext);
 	const navigate = useNavigate()
 
 	const { mutate: loginUser, error, isLoading } = useMutation<any, Error, UserCredentials>(login, {
@@ -50,7 +50,15 @@ const Login = () => {
 	const onOTP = () =>{
 		navigate("/OTP")
 	}
+	useEffect(() => {
+		if(user){
+			navigate('/')
+		}
+	
+	}, [user])
+	
 
+	if(loading) return<></>
 	return (
 		<>
 			<div className="background-dim">

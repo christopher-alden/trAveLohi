@@ -1,5 +1,5 @@
 import { UserModel } from "@myTypes/user.types";
-import { ApiEndpoints } from "@util/api.utils";
+import { ApiEndpoints, BanUser } from "@util/api.utils";
 import {  useEffect, useState } from "react";
 import useLimiter from "src/hooks/useLimiter";
 import styles from '@styles/global.module.scss'
@@ -10,14 +10,42 @@ import Bento from "@comp/container/Bento";
 import Button from "@comp/form/Button";
 import chevronIcon from "@icons/down-icon.png"
 import Picture from "@comp/container/Picture";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query"
+import { queryClient } from "src/App";
 
 const ManageUser = () =>{
 
     const { scrollEndRef, isIntersecting, enableFetch, setEnableFetch } = useInfiniteScroll();
-    const { setLimit, limit, offset, updateOffset } = useLimiter();
+    const { setOffset, limit, offset, updateOffset } = useLimiter();
     const [users, setUsers] = useState<UserModel[]>([]); 
     const [chosenUser, setChosenUser] = useState<UserModel>();
+
+    const {mutate: banUser, error: banError, isLoading: banIsLoading} = useMutation(
+        async (userId: number) => {
+            const url = `${BanUser(userId)}`;
+            const response = await fetch(url, {
+                method: 'PATCH', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to ban user');
+            }
+            return response.json();
+        },
+        {
+            onSuccess: () => {
+                window.location.reload();
+            },
+            onError: (error) => {
+                console.error('Error banning user:', error);
+            },
+        }
+    );
+    
+    
 
     const infiniteFetchUser = async () => {
         const url = `${ApiEndpoints.UserGetAllData}?limit=${limit}&offset=${offset}`;
@@ -29,7 +57,7 @@ const ManageUser = () =>{
         return res.json()
     };
 
-    const {error, isLoading:userLoading} = useQuery(['infiniteFetchUser'], infiniteFetchUser,{
+    const {error, isLoading:userLoading,refetch} = useQuery(['infiniteFetchUser'], infiniteFetchUser,{
         retry:false,
         enabled: enableFetch,
         cacheTime: 10 * 60 * 1000,
@@ -72,6 +100,13 @@ const ManageUser = () =>{
         setChosenUser(user)
     }
 
+    const toggleBan = async () => {
+        if(chosenUser?.ID){
+            banUser(chosenUser.ID)
+        }
+    }
+
+    if(banIsLoading)return <></>
     return(
         <Container width="100%" height="100%"  className="no-br c-white no-padding ">
             <Bento width="50%" height="100%">
@@ -153,7 +188,7 @@ const ManageUser = () =>{
                                 </Container>
                             </Container>
 
-                            <Button className="sidebar-btn bottom">
+                            <Button onClick={toggleBan} className="sidebar-btn bottom">
                                 <Label color={styles.error}>
                                     BAN
                                 </Label>

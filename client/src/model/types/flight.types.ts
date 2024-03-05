@@ -30,8 +30,8 @@ export type FlightTime = {
 
 // admin stuff lah
 export interface Flight{
-	departure: Airport | null;
-	arrival: Airport | null;
+	departure: AirportDetails | null;
+	arrival: AirportDetails | null;
     flightTime: FlightTime | null
 };
 
@@ -81,7 +81,6 @@ export type FlightReservation = {
 
 
 export interface FlightTransactionPayload{
-	ticketCode: string,
 	flightId:number,
 	seatId:number,
 	isRoundTrip:boolean,
@@ -89,6 +88,7 @@ export interface FlightTransactionPayload{
 }
 
 export interface FlightTransaction extends FlightTransactionPayload{
+	ticketCode: string,
 	ID?:number,
 	travelerId:number,
 	userTransactionId:number,
@@ -96,7 +96,7 @@ export interface FlightTransaction extends FlightTransactionPayload{
 }
 
 
-export type CompleteFlightTranscation = {
+export type CompleteFlightTransaction = {
 	userId:number,
 	price: number,
 	transactionDate: Date,

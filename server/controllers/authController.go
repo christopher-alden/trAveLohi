@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"regexp"
 	"strconv"
 	"time"
 
@@ -15,51 +16,74 @@ import (
 const SecretKey = "secret"
 
 func Register(c *fiber.Ctx) error {
-	var request map[string]string
+	var request struct {
+		FirstName              string `json:"firstName"`
+		LastName               string `json:"lastName"`
+		Email                  string `json:"email"`
+		Password               string `json:"password"`
+		Gender                 string `json:"gender"`
+		DateOfBirth            string `json:"dateOfBirth"`
+		ProfilePhoto           string `json:"profilePhoto"`
+		SecurityQuestion       string `json:"securityQuestion"`
+		SecurityQuestionAnswer string `json:"securityQuestionAnswer"`
+		Role                   string `json:"role"`
+		IsBanned               string `json:"isBanned"`
+		IsNewsletter           string `json:"isNewsletter"`
+	}
+
 	if err := c.BodyParser(&request); err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Request parsing failed"})
+	}
+
+	nameRegex := regexp.MustCompile(`^[a-zA-Z]{5,}$`)
+	if !nameRegex.MatchString(request.FirstName) || !nameRegex.MatchString(request.LastName) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "First name and last name must be more than 5 characters and contain no symbols or numbers"})
+	}
+
+	dob, err := time.Parse("2006-01-02", request.DateOfBirth)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid date of birth format"})
+	}
+	if time.Now().Year()-dob.Year() < 13 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "User must be at least 13 years old"})
+	}
+
+	if request.Gender != "Male" && request.Gender != "Female" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Gender must be male or female"})
 	}
 
 	var existingUser models.User
 	db := database.GetDB()
-	db.Where("email = ?", request["email"]).First((&existingUser))
-
-	if existingUser.Email == request["email"] {
-		c.Status(fiber.StatusConflict)
-		return c.JSON(fiber.Map{
-			"message": "User Already Exists",
-		})
+	db.Where("email = ?", request.Email).First(&existingUser)
+	if existingUser.Email == request.Email {
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{"message": "User already exists"})
 	}
 
-	dob, err := time.Parse("2006-01-02", request["dateOfBirth"])
+	password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to hash password"})
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(request["password"]), 14)
+	isBanned := request.IsBanned == "true"
+	isNewsletter := request.IsNewsletter == "true"
 
-	isBanned := cvtBool(request["isBanned"])
-	isNewsletter := cvtBool(request["isNewsletter"])
-	
 	user := models.User{
-		FirstName:              request["firstName"],
-		LastName:               request["lastName"],
-		Email:                  request["email"],
+		FirstName:              request.FirstName,
+		LastName:               request.LastName,
+		Email:                  request.Email,
 		Password:               password,
-		Gender:                 request["gender"],
+		Gender:                 request.Gender,
 		DateOfBirth:            dob,
-		ProfilePhoto:           request["profilePhoto"],
-		SecurityQuestion:       request["securityQuestion"],
-		SecurityQuestionAnswer: request["securityQuestionAnswer"],
-		Role:                   request["role"],
+		ProfilePhoto:           request.ProfilePhoto,
+		SecurityQuestion:       request.SecurityQuestion,
+		SecurityQuestionAnswer: request.SecurityQuestionAnswer,
+		Role:                   request.Role,
 		IsBanned:               isBanned,
 		IsNewsletter:           isNewsletter,
 	}
 
 	db.Create(&user)
-	return c.JSON(fiber.Map{
-		"message": "Success",
-	})
+	return c.JSON(fiber.Map{"message": "User registered successfully"})
 }
 
 func Login(c *fiber.Ctx) error {
@@ -79,6 +103,13 @@ func Login(c *fiber.Ctx) error {
 		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
 			"message": "User Not Found",
+		})
+	}
+
+	if user.IsBanned {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "User is banned",
 		})
 	}
 

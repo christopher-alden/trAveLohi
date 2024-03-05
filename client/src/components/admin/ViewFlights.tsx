@@ -2,7 +2,7 @@ import Bento from "@comp/container/Bento"
 import Container from "@comp/container/Container"
 import Button from "@comp/form/Button"
 import Label from "@comp/form/Label"
-import { Flight, FlightDetail } from "@myTypes/flight.types"
+import { FlightDetail } from "@myTypes/flight.types"
 import styles from '@styles/global.module.scss'
 import { ApiEndpoints } from "@util/api.utils"
 import { useEffect, useState } from "react"

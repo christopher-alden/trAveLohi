@@ -25,9 +25,26 @@ export enum ApiEndpoints {
     SeatGetDetail = 'http://localhost:8000/api/get-seat-details',
     SeatGetAmount = 'http://localhost:8000/api/get-seat-amount',
     FlightCompleteTransactionCreate = 'http://localhost:8000/api/create-complete-flight-transaction',
+    HotelCompleteTransactionCreate = 'http://localhost:8000/api/create-complete-hotel-transaction',
+    // User = 'http://localhost:8000/api/:ID/ban',
     // UserTransactionCreate = 'http://localhost:8000/api/create-user-transaction',
     // FlightTransactionCreate = 'http://localhost:8000/api/create-flight-transaction',
     // TravelerCreate = 'http://localhost:8000/api/create-traveler',
+    HotelCreate = 'http://localhost:8000/api/create-hotel',
+    HotelGetAllData = 'http://localhost:8000/api/get-all-hotels',
+    HotelRoomDetailsCreate = 'http://localhost:8000/api/create-room-details',
+    HotelRoomDetailsGetData = 'http://localhost:8000/api/get-hotel-and-room-details',
+    UserUpdateProfile = 'http://localhost:8000/api/update-user-profile',
+    UpdatePassword = 'http://localhost:8000/api/update-password',
+    UpdateHotelTime = 'http://localhost:8000/api/update-hotel-time',
+    GetCart = 'http://localhost:8000/api/get-cart',
+    UpdatePromo = 'http://localhost:8000/api/update-promo',
+    UserCCUpdateOrCreate = 'http://localhost:8000/api/user/cc',
+    SearchCities = 'http://localhost:8000/api/search-cities',
+    HotelPay = 'http://localhost:8000/api/hotel-pay',
+    
 
 
 }
+
+export const BanUser = (userId:number) => `http://localhost:8000/api/user/${userId}/ban`

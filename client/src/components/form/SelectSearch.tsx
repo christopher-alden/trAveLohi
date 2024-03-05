@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import FloatingSearch from '@comp/navigation/FloatingSearch';
 import styles from '@styles/global.module.scss';
 import Label from '@comp/form/Label';
-import { Airport } from '@myTypes/location.types';
+import { Airport, AirportDetails } from '@myTypes/location.types';
 import { useSearch } from 'src/context/searchContext';
 
 type SelectSearchProps = {
-    getSelected: (result: Airport) => void; 
-    selectedLocation: Airport | null; // Accept the current selection as a prop
+    getSelected: (result: AirportDetails) => void; 
+    selectedLocation: AirportDetails | null; // Accept the current selection as a prop
     mainTheme?: boolean
 };
 
@@ -15,9 +15,9 @@ const SelectSearch = ({ getSelected, selectedLocation, mainTheme=true }: SelectS
     const { handleSearch, searchResults } = useSearch();
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-    const handleLocationSelect = (location: Airport) => {
-        getSelected(location); // Notify parent component
-        setIsSearchVisible(false); // Close the search modal
+    const handleLocationSelect = (location: AirportDetails) => {
+        getSelected(location); 
+        setIsSearchVisible(false); 
     };
 
     return (
@@ -28,7 +28,7 @@ const SelectSearch = ({ getSelected, selectedLocation, mainTheme=true }: SelectS
                 color={mainTheme ? styles.black: styles.white}
                 className="pointer"
             >
-                {selectedLocation ? `${selectedLocation.city}` : 'Select'}
+                {selectedLocation ? `${selectedLocation.city?.name}` : 'Select'}
             </Label>
             {isSearchVisible && (
                 <FloatingSearch handleClose={() => setIsSearchVisible(false)} onSearchChange={handleSearch}>
@@ -39,7 +39,7 @@ const SelectSearch = ({ getSelected, selectedLocation, mainTheme=true }: SelectS
                             onClick={() => handleLocationSelect(result)}
                             color={styles.white}
                         >
-                            {`${result.city}, ${result.country}`}
+                            {`${result.city?.name}, ${result.country}`}
                         </Label>
                     ))}
                 </FloatingSearch>

@@ -12,7 +12,7 @@ import TextField from "@comp/form/TextField"
 import Promo from "@comp/product/Promo"
 import useLimiter from "src/hooks/useLimiter"
 import useInfiniteScroll from "src/hooks/useInfiniteScroll"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 
 const UpdatePromo = () =>{
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -38,6 +38,7 @@ const UpdatePromo = () =>{
         cacheTime: 10 * 60 * 1000,
         onSuccess: (data) =>{
             const transformedData = data.map((promo:any) => ({
+                ID:promo.ID,
                 image: promo.Image,
                 amount: promo.Amount,
                 description: promo.Description,
@@ -63,8 +64,45 @@ const UpdatePromo = () =>{
         setChosenPromo(promo)
     }
 
+
+    const {mutate:updatePromo, error:promoError} = useMutation(
+        async (promoData:any) => {
+            const response = await fetch(ApiEndpoints.UpdatePromo, { 
+                method: 'PUT',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(promoData),
+                credentials: 'include',
+            });
+            
+            // if (!response.ok) {
+            //     throw new Error('Failed to update promo');
+            // }
+            
+            const data = await  response.json();
+            console.log(data.message)
+            return data
+        }, {
+    onSuccess: (data) => {
+        // Handle success scenario
+        console.log('Promo updated successfully', data);
+        // You might want to refetch promo list here or update the state to reflect the changes
+    },
+    onError: (error) => {
+        // Handle error scenario
+        console.error('Failed to update promo', error);
+    },
+    });
+
+
     const onSubmit = async (data:any) => {
         console.log(data);
+        updatePromo({
+            //@ts-ignore
+            id:chosenPromo?.ID,
+            ...data
+        })
     };
 
     useEffect(() => {

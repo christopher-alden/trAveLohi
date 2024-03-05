@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		BodyLimit: 20 * 1024 * 1024,
+	})
 	database.Connect()
 	// database.Seed()
 
